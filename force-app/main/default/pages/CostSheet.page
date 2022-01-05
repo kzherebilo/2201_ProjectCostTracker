@@ -1,11 +1,11 @@
 <apex:page showHeader="false" standardStylesheets="false"
-    standardController="Account" extensions="CostSheetAsPdfExtension"
+    standardController="Project__c" extensions="CostSheetAsPdfExtension"
     contentType="{! renderedContentType }" renderAs="PDF">
     
     <apex:stylesheet value="{!URLFOR($Resource.CostSheetStyles)}"/>
 
     <table class="cost-sheet__table">
-        <caption>Cost Sheet for Project (id: {! Account.Id} )</caption>
+        <caption>Cost Sheet for Project {! Project__c.Name }</caption>
         <colgroup>
             <col span="2" class="cost-sheet__items" />
             <col span="4" class="cost-sheet__price" />
@@ -45,105 +45,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row" colspan="2"
-                    class="cell__outer-border-left__thick">
-                    Appliance
-                </th>
-                <td class="cell__inner-border-left__thick">$ 3000</td>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick
-                        cell__outer-border-right__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" colspan="2"
-                    class="cell__outer-border-left__thick">
-                    Cabinets
-                </th>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick">$ 3000</td>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick
-                        cell__outer-border-right__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" colspan="2"
-                    class="cell__outer-border-left__thick">
-                    Cabinets
-                </th>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick">$ 3000</td>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick
-                        cell__outer-border-right__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" colspan="2"
-                    class="cell__outer-border-left__thick">
-                    Cabinets
-                </th>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick">$ 3000</td>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick
-                        cell__outer-border-right__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" colspan="2"
-                    class="cell__outer-border-left__thick">
-                    Cabinets
-                </th>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick">$ 3000</td>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick
-                        cell__outer-border-right__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" colspan="2"
-                    class="cell__outer-border-left__thick">
-                    Cabinets
-                </th>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick">$ 3000</td>
-                <td class="cell__inner-border-left__thick">$ 0</td>
-                <td class="cell__inner-border-left__thick
-                        cell__outer-border-right__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-            </tr>
-            <apex:repeat value="{! Account.Contacts }" var="contact" >
+            <apex:repeat value="{! primaryCosts }" var="costLineName">
                 <tr>
                     <th scope="row" colspan="2"
                         class="cell__outer-border-left__thick">
-                        {! contact.Name }
+                        {! costLineName }
                     </th>
-                    <td class="cell__inner-border-left__thick">
-                        {! contact.Title }
-                    </td>
-                    <td class="cell__inner-border-left__thick">
-                        {! contact.Phone }
-                    </td>
-                    <td class="cell__inner-border-left__thick">
-                        {! contact.Email }
-                    </td>
+                    <apex:repeat value="{! primaryCosts[costLineName] }" var="costValue" >
+                        <td class="cell__inner-border-left__thick">$ {! costValue }</td>
+                    </apex:repeat>
                     <td class="cell__inner-border-left__thick
                             cell__outer-border-right__thick
                             cell__font__total-amount">
@@ -151,6 +61,7 @@
                     </td>
                 </tr>
             </apex:repeat>
+
             <tr class="cost-sheet__subtotal">
                 <th scope="row" colspan="2"
                     class="cell__inner-border-top__thick 
@@ -310,5 +221,8 @@
             </tr>
         </tbody>
     </table>
+    <p class="debug">
+
+    </p>
 
 </apex:page>
