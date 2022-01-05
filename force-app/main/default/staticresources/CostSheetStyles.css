@@ -1,0 +1,97 @@
+.cost-sheet__table {
+    font-family: Helvetica, sans-serif;
+    font-size: 10pt;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0px;
+    -fs-table-paginate: paginate;
+}
+.cost-sheet__table caption {
+    caption-side: top;
+}
+.cost-sheet__table td,
+.cost-sheet__table th {
+    border-style: solid;
+    border-color: black;
+    border-width: 0.5px;
+    padding: 0.05in;
+    padding-top: 0.02in;
+    padding-bottom: 0.02in;
+    /* debug values */
+    /* padding-top: 2cm;
+    padding-bottom: 2cm; */
+    /* end of debug values */
+}
+.cost-sheet__table caption {
+    font-size: large;
+    font-weight: bold;
+    padding-bottom: 0.35in;
+}
+.cost-sheet__table thead th {
+    text-align: center;
+}
+.cost-sheet__table tbody th[colspan="2"] {
+    text-align: right;
+}
+.cost-sheet__table tbody td {
+    text-align: right;
+    width: 13%;
+}
+
+.cost-sheet__table .cell__font__total-amount {
+    font-weight: bold;
+}
+.cost-sheet__table .cell__padding-top__large {
+    padding-top: 0.15in;
+}
+
+.cost-sheet__table .cell__border__none {
+    border: none;
+}
+.cost-sheet__table .cell__inner-border-left__thick {
+    border-left-width: 1.5px;
+}
+.cost-sheet__table .cell__inner-border-top__thick {
+    border-top-width: 1.5px;
+}
+.cost-sheet__table .cell__inner-border-bottom__thick {
+    border-bottom-width: 1.5px;
+}
+.cost-sheet__table .cell__outer-border-left__thick {
+    border-left-width: 2px;
+}
+.cost-sheet__table .cell__outer-border-right__thick {
+    border-right-width: 2px;
+}
+.cost-sheet__table .cell__outer-border-top__thick {
+    border-top-width: 2px;
+}
+.cost-sheet__table .cell__outer-border-bottom__thick {
+    border-bottom-width: 2px;
+}
+.cost-sheet__table .cell__bg-color__not-applicable {
+    background-color: rgb(220,220,220);
+}
+
+@media print {
+    .cost-sheet__table {
+        page-break-inside: auto;
+    }
+    .cost-sheet__table tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+}
+@page {
+    size: letter portrait;
+    padding: 0in;
+    margin-left: 0.9in;
+    margin-top: 0.35in;
+    margin-right: 0.35in;
+    margin-bottom: 0.7in;
+
+    @bottom-center {
+        content: counter(page) " / " counter(pages);
+        padding-bottom: 0.35in;
+    }
+}

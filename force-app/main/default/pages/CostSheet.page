@@ -1,0 +1,314 @@
+<apex:page showHeader="false" standardStylesheets="false"
+    standardController="Account" extensions="CostSheetAsPdfExtension"
+    contentType="{! renderedContentType }" renderAs="PDF">
+    
+    <apex:stylesheet value="{!URLFOR($Resource.CostSheetStyles)}"/>
+
+    <table class="cost-sheet__table">
+        <caption>Cost Sheet for Project (id: {! Account.Id} )</caption>
+        <colgroup>
+            <col span="2" class="cost-sheet__items" />
+            <col span="4" class="cost-sheet__price" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col" colspan="2"
+                    class="cell__outer-border-left__thick
+                        cell__outer-border-top__thick
+                        cell__inner-border-bottom__thick">
+                </th>
+                <th scope="col" colspan="1"
+                    class="cell__outer-border-top__thick
+                        cell__inner-border-bottom__thick
+                        cell__inner-border-left__thick">
+                    Labor
+                </th>
+                <th scope="col" colspan="1"
+                    class="cell__outer-border-top__thick
+                        cell__inner-border-bottom__thick
+                        cell__inner-border-left__thick">
+                    Materials
+                </th>
+                <th scope="col" colspan="1"
+                    class="cell__outer-border-top__thick
+                        cell__inner-border-bottom__thick
+                        cell__inner-border-left__thick">
+                    Paid on Contract
+                </th>
+                <th scope="col" colspan="1"
+                    class="cell__outer-border-top__thick
+                        cell__outer-border-right__thick
+                        cell__inner-border-bottom__thick
+                        cell__inner-border-left__thick">
+                    Total
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row" colspan="2"
+                    class="cell__outer-border-left__thick">
+                    Appliance
+                </th>
+                <td class="cell__inner-border-left__thick">$ 3000</td>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick
+                        cell__outer-border-right__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="2"
+                    class="cell__outer-border-left__thick">
+                    Cabinets
+                </th>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick">$ 3000</td>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick
+                        cell__outer-border-right__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="2"
+                    class="cell__outer-border-left__thick">
+                    Cabinets
+                </th>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick">$ 3000</td>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick
+                        cell__outer-border-right__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="2"
+                    class="cell__outer-border-left__thick">
+                    Cabinets
+                </th>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick">$ 3000</td>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick
+                        cell__outer-border-right__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="2"
+                    class="cell__outer-border-left__thick">
+                    Cabinets
+                </th>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick">$ 3000</td>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick
+                        cell__outer-border-right__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="2"
+                    class="cell__outer-border-left__thick">
+                    Cabinets
+                </th>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick">$ 3000</td>
+                <td class="cell__inner-border-left__thick">$ 0</td>
+                <td class="cell__inner-border-left__thick
+                        cell__outer-border-right__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+            </tr>
+            <apex:repeat value="{! Account.Contacts }" var="contact" >
+                <tr>
+                    <th scope="row" colspan="2"
+                        class="cell__outer-border-left__thick">
+                        {! contact.Name }
+                    </th>
+                    <td class="cell__inner-border-left__thick">
+                        {! contact.Title }
+                    </td>
+                    <td class="cell__inner-border-left__thick">
+                        {! contact.Phone }
+                    </td>
+                    <td class="cell__inner-border-left__thick">
+                        {! contact.Email }
+                    </td>
+                    <td class="cell__inner-border-left__thick
+                            cell__outer-border-right__thick
+                            cell__font__total-amount">
+                        $ 0
+                    </td>
+                </tr>
+            </apex:repeat>
+            <tr class="cost-sheet__subtotal">
+                <th scope="row" colspan="2"
+                    class="cell__inner-border-top__thick 
+                        cell__inner-border-bottom__thick
+                        cell__outer-border-left__thick">
+                </th>
+                <td colspan="1" 
+                    class="cell__inner-border-top__thick 
+                        cell__inner-border-bottom__thick
+                        cell__inner-border-left__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+                <td colspan="1" 
+                    class="cell__inner-border-top__thick 
+                        cell__inner-border-bottom__thick
+                        cell__inner-border-left__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+                <td colspan="1" 
+                    class="cell__inner-border-top__thick 
+                        cell__inner-border-bottom__thick
+                        cell__inner-border-left__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+                <td colspan="1" 
+                    class="cell__inner-border-top__thick 
+                        cell__inner-border-bottom__thick
+                        cell__outer-border-right__thick
+                        cell__inner-border-left__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+            </tr>
+            <tr class="cost-sheet__other-direct">
+                <th scope="row" colspan="1"
+                    class="cell__outer-border-left__thick">
+                    Other Direct
+                </th>
+                <th scope="row" colspan="1">
+                    Appraisal/Inspections
+                </th>
+                <td colspan="3" 
+                    class="cell__bg-color__not-applicable
+                        cell__inner-border-left__thick">
+                </td>
+                <td colspan="1"
+                    class="cell__outer-border-right__thick
+                        cell__inner-border-left__thick">
+                    $ 0
+                </td>
+            </tr>
+            <tr class="cost-sheet__other-direct">
+                <th scope="row" colspan="1"
+                    class="cell__outer-border-left__thick">
+                    Other Direct
+                </th>
+                <th scope="row" colspan="1">
+                    Dumpsters/Porta Potty
+                </th>
+                <td colspan="3"
+                    class="cell__bg-color__not-applicable
+                        cell__inner-border-left__thick">
+                </td>
+                <td colspan="1"
+                    class="cell__outer-border-right__thick
+                        cell__inner-border-left__thick">
+                    $ 0
+                </td>
+            </tr>
+            <tr class="cost-sheet__other-direct">
+                <th scope="row" colspan="1"
+                    class="cell__outer-border-left__thick">
+                    Other Direct
+                </th>
+                <th scope="row" colspan="1">
+                    Permits/Registrations
+                </th>
+                <td colspan="3"
+                    class="cell__bg-color__not-applicable
+                        cell__inner-border-left__thick">
+                </td>
+                <td colspan="1"
+                    class="cell__outer-border-right__thick
+                        cell__inner-border-left__thick">
+                    $ 0
+                </td>
+            </tr>
+            <tr class="cost-sheet__other-direct">
+                <th scope="row" colspan="1"
+                    class="cell__outer-border-left__thick">
+                    Other Direct
+                </th>
+                <th scope="row" colspan="1">
+                    Shipping/Delivery
+                </th>
+                <td colspan="3"
+                    class="cell__bg-color__not-applicable
+                        cell__inner-border-left__thick">
+                </td>
+                <td colspan="1"
+                    class="cell__outer-border-right__thick
+                        cell__inner-border-left__thick">
+                    $ 0
+                </td>
+            </tr>
+            <tr class="cost-sheet__other-direct">
+                <th scope="row" colspan="1"
+                    class="cell__outer-border-left__thick">
+                    Other Direct
+                </th>
+                <th scope="row" colspan="1">
+                    Other
+                </th>
+                <td colspan="3"
+                    class="cell__bg-color__not-applicable
+                        cell__inner-border-left__thick">
+                </td>
+                <td colspan="1"
+                    class="cell__outer-border-right__thick
+                        cell__inner-border-left__thick">
+                    $ 0
+                </td>
+            </tr>
+            <tr class="cost-sheet__other-direct-totals">
+                <th colspan="2"
+                    class="cell__outer-border-bottom__thick
+                        cell__inner-border-top__thick
+                        cell__outer-border-left__thick">
+                </th>
+                <td colspan="3" 
+                    class="cell__bg-color__not-applicable 
+                        cell__outer-border-bottom__thick
+                        cell__inner-border-top__thick
+                        cell__inner-border-left__thick">
+                </td>
+                <td colspan="1"
+                    class="cell__outer-border-right__thick
+                        cell__outer-border-bottom__thick
+                        cell__inner-border-top__thick
+                        cell__inner-border-left__thick
+                        cell__font__total-amount">
+                    $ 0
+                </td>
+            </tr>
+            <tr class="cost-sheet__table__overall-amount">
+                <th colspan="2" class="cell__border__none"></th>
+                <td colspan="3" class="cell__border__none"></td>
+                <td colspan="1"
+                    class="cell__border__none
+                        cell__font__total-amount
+                        cell__padding-top__large">
+                    $ 5603
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</apex:page>
