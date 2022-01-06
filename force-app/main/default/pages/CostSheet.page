@@ -4,225 +4,182 @@
     
     <apex:stylesheet value="{!URLFOR($Resource.CostSheetStyles)}"/>
 
-    <table class="cost-sheet__table">
+    <apex:outputText rendered="{! isEmptyTable }">
+        {! emptyTableMessage }
+    </apex:outputText>
+
+    <table class="cost-sheet__table"
+        style="{! IF(isEmptyTable, 'display: none', '') }">
         <caption>Cost Sheet for Project {! Project__c.Name }</caption>
-        <colgroup>
-            <col span="2" class="cost-sheet__items" />
-            <col span="4" class="cost-sheet__price" />
-        </colgroup>
+<!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABLE HEADER BEGIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
         <thead>
             <tr>
-                <th scope="col" colspan="2"
+                <apex:variable var="cellIndex" value="{! 0 }"></apex:variable>
+                <apex:variable var="regularCellStyleClass"
+                    value="cell__outer-border-top__thick
+                        cell__inner-border-bottom__thick
+                        cell__inner-border-left__thick">
+                </apex:variable>
+                <apex:variable var="lastCellStyleClass"
+                    value="cell__outer-border-top__thick
+                        cell__outer-border-right__thick
+                        cell__inner-border-bottom__thick
+                        cell__inner-border-left__thick">
+                </apex:variable>
+                <th scope="col" colspan="1"
                     class="cell__outer-border-left__thick
                         cell__outer-border-top__thick
                         cell__inner-border-bottom__thick">
+                    <!-- HEADER EMPTY CELL -->
                 </th>
-                <th scope="col" colspan="1"
-                    class="cell__outer-border-top__thick
-                        cell__inner-border-bottom__thick
-                        cell__inner-border-left__thick">
-                    Labor
-                </th>
-                <th scope="col" colspan="1"
-                    class="cell__outer-border-top__thick
-                        cell__inner-border-bottom__thick
-                        cell__inner-border-left__thick">
-                    Materials
-                </th>
-                <th scope="col" colspan="1"
-                    class="cell__outer-border-top__thick
-                        cell__inner-border-bottom__thick
-                        cell__inner-border-left__thick">
-                    Paid on Contract
-                </th>
-                <th scope="col" colspan="1"
-                    class="cell__outer-border-top__thick
-                        cell__outer-border-right__thick
-                        cell__inner-border-bottom__thick
-                        cell__inner-border-left__thick">
-                    Total
-                </th>
+                <apex:repeat value="{! primaryCostsHeaderList }" var="name" >
+                    <th class="{! IF(cellIndex = primaryCostsLastCellIdx,
+                        lastCellStyleClass, regularCellStyleClass) }"
+                        style="width: {! primaryCostsCellWidth }">
+                        {! name }
+                    </th>
+                    <apex:variable var="cellIndex" value="{! cellIndex + 1 }" />
+                </apex:repeat>
             </tr>
         </thead>
+<!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABLE HEADER END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+
+
+<!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRIMARY COSTS BEGIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
         <tbody>
             <apex:repeat value="{! primaryCosts }" var="costLineName">
                 <tr>
-                    <th scope="row" colspan="2"
-                        class="cell__outer-border-left__thick">
-                        {! costLineName }
-                    </th>
-                    <apex:repeat value="{! primaryCosts[costLineName] }" var="costValue" >
-                        <td class="cell__inner-border-left__thick">$ {! costValue }</td>
-                    </apex:repeat>
-                    <td class="cell__inner-border-left__thick
+                    <apex:variable var="cellIndex" value="{! 0 }"></apex:variable>
+                    <apex:variable var="regularCellStyleClass"
+                        value="cell__inner-border-left__thick">
+                    </apex:variable>
+                    <apex:variable var="regularCellStyleClass"
+                        value="cell__inner-border-top__thick 
+                            cell__inner-border-bottom__thick
+                            cell__outer-border-left__thick
+                            cell__font__total-amount"
+                        rendered="{! costLineName = primaryCostsTotalRowName }">
+                    </apex:variable>
+                    <apex:variable var="lastCellStyleClass"
+                        value="cell__inner-border-left__thick
                             cell__outer-border-right__thick
                             cell__font__total-amount">
-                        $ 0
+                    </apex:variable>
+                    <apex:variable var="lastCellStyleClass"
+                        value="cell__inner-border-top__thick 
+                            cell__inner-border-bottom__thick
+                            cell__outer-border-right__thick
+                            cell__inner-border-left__thick
+                            cell__font__total-amount"
+                        rendered="{! costLineName = primaryCostsTotalRowName }">
+                    </apex:variable>
+                    <apex:variable var="headerCellStyleClass"
+                        value="cell__outer-border-left__thick
+                            cell__text-align__right">
+                    </apex:variable>
+                    <apex:variable var="headerCellStyleClass"
+                        value="cell__inner-border-top__thick 
+                            cell__inner-border-bottom__thick
+                            cell__outer-border-left__thick
+                            cell__text-align__right"
+                        rendered="{! costLineName = primaryCostsTotalRowName }">
+                    </apex:variable>
+                    <th scope="row" colspan="1"
+                        class="{! headerCellStyleClass }">
+                        <apex:outputText 
+                            rendered="{! NOT(costLineName = primaryCostsTotalRowName) }">
+                            {! costLineName }
+                        </apex:outputText>
+                    </th>
+                    <apex:repeat value="{! primaryCosts[costLineName] }" var="costValue" >
+                        <td class="{! IF(cellIndex = primaryCostsLastCellIdx,
+                            lastCellStyleClass, regularCellStyleClass) }"
+                            style="width: {! primaryCostsCellWidth }">
+                            <apex:outputText value="{0, Number, Currency}">
+                                <apex:param value="{! costValue }">
+                                </apex:param>
+                            </apex:outputText>
+                        </td>
+                        <apex:variable var="cellIndex" value="{! cellIndex + 1 }" />
+                    </apex:repeat>
+                </tr>
+            </apex:repeat>
+<!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRIMARY COSTS END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+
+<!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SECONDARY COSTS BEGIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+            <apex:repeat value="{! secondaryCosts }" var="costLineName">
+                <tr>
+                    <apex:variable var="headerCellStyleClass"
+                        value="cell__outer-border-left__thick">
+                    </apex:variable>
+                    <apex:variable var="headerCellStyleClass"
+                        value="cell__outer-border-bottom__thick
+                            cell__inner-border-top__thick
+                            cell__outer-border-left__thick"
+                        rendered="{! costLineName = secondaryCostsTotalRowName }">
+                    </apex:variable>
+                    <apex:variable var="regularCellStyleClass"
+                        value="cell__bg-color__not-applicable
+                            cell__inner-border-left__thick">
+                    </apex:variable>
+                    <apex:variable var="regularCellStyleClass"
+                        value="cell__bg-color__not-applicable 
+                            cell__outer-border-bottom__thick
+                            cell__inner-border-top__thick
+                            cell__inner-border-left__thick"
+                        rendered="{! costLineName = secondaryCostsTotalRowName }">
+                    </apex:variable>
+                    <apex:variable var="lastCellStyleClass"
+                        value="cell__outer-border-right__thick
+                            cell__inner-border-left__thick">
+                    </apex:variable>
+                    <apex:variable var="lastCellStyleClass"
+                        value="cell__outer-border-right__thick
+                            cell__outer-border-bottom__thick
+                            cell__inner-border-top__thick
+                            cell__inner-border-left__thick
+                            cell__font__total-amount"
+                        rendered="{! costLineName = secondaryCostsTotalRowName }">
+                    </apex:variable>
+                    <th scope="row" colspan="1"
+                        class="{! headerCellStyleClass }">
+                        <apex:outputText
+                            rendered="{! NOT(costLineName = secondaryCostsTotalRowName) }">
+                            {! costLineName }
+                        </apex:outputText>
+                    </th>
+                    <td colspan="{! primaryCostsLastCellIdx }"
+                        class="{! regularCellStyleClass }">
+                    </td>
+                    <td colspan="1"
+                        class="{! lastCellStyleClass }">
+                        <apex:outputText value="{0, Number, Currency}">
+                            <apex:param value="{! secondaryCosts[costLineName] }">
+                            </apex:param>
+                        </apex:outputText>
                     </td>
                 </tr>
             </apex:repeat>
+<!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SECONDARY COSTS END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
 
-            <tr class="cost-sheet__subtotal">
-                <th scope="row" colspan="2"
-                    class="cell__inner-border-top__thick 
-                        cell__inner-border-bottom__thick
-                        cell__outer-border-left__thick">
-                </th>
-                <td colspan="1" 
-                    class="cell__inner-border-top__thick 
-                        cell__inner-border-bottom__thick
-                        cell__inner-border-left__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-                <td colspan="1" 
-                    class="cell__inner-border-top__thick 
-                        cell__inner-border-bottom__thick
-                        cell__inner-border-left__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-                <td colspan="1" 
-                    class="cell__inner-border-top__thick 
-                        cell__inner-border-bottom__thick
-                        cell__inner-border-left__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-                <td colspan="1" 
-                    class="cell__inner-border-top__thick 
-                        cell__inner-border-bottom__thick
-                        cell__outer-border-right__thick
-                        cell__inner-border-left__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-            </tr>
-            <tr class="cost-sheet__other-direct">
-                <th scope="row" colspan="1"
-                    class="cell__outer-border-left__thick">
-                    Other Direct
-                </th>
-                <th scope="row" colspan="1">
-                    Appraisal/Inspections
-                </th>
-                <td colspan="3" 
-                    class="cell__bg-color__not-applicable
-                        cell__inner-border-left__thick">
-                </td>
-                <td colspan="1"
-                    class="cell__outer-border-right__thick
-                        cell__inner-border-left__thick">
-                    $ 0
-                </td>
-            </tr>
-            <tr class="cost-sheet__other-direct">
-                <th scope="row" colspan="1"
-                    class="cell__outer-border-left__thick">
-                    Other Direct
-                </th>
-                <th scope="row" colspan="1">
-                    Dumpsters/Porta Potty
-                </th>
-                <td colspan="3"
-                    class="cell__bg-color__not-applicable
-                        cell__inner-border-left__thick">
-                </td>
-                <td colspan="1"
-                    class="cell__outer-border-right__thick
-                        cell__inner-border-left__thick">
-                    $ 0
-                </td>
-            </tr>
-            <tr class="cost-sheet__other-direct">
-                <th scope="row" colspan="1"
-                    class="cell__outer-border-left__thick">
-                    Other Direct
-                </th>
-                <th scope="row" colspan="1">
-                    Permits/Registrations
-                </th>
-                <td colspan="3"
-                    class="cell__bg-color__not-applicable
-                        cell__inner-border-left__thick">
-                </td>
-                <td colspan="1"
-                    class="cell__outer-border-right__thick
-                        cell__inner-border-left__thick">
-                    $ 0
-                </td>
-            </tr>
-            <tr class="cost-sheet__other-direct">
-                <th scope="row" colspan="1"
-                    class="cell__outer-border-left__thick">
-                    Other Direct
-                </th>
-                <th scope="row" colspan="1">
-                    Shipping/Delivery
-                </th>
-                <td colspan="3"
-                    class="cell__bg-color__not-applicable
-                        cell__inner-border-left__thick">
-                </td>
-                <td colspan="1"
-                    class="cell__outer-border-right__thick
-                        cell__inner-border-left__thick">
-                    $ 0
-                </td>
-            </tr>
-            <tr class="cost-sheet__other-direct">
-                <th scope="row" colspan="1"
-                    class="cell__outer-border-left__thick">
-                    Other Direct
-                </th>
-                <th scope="row" colspan="1">
-                    Other
-                </th>
-                <td colspan="3"
-                    class="cell__bg-color__not-applicable
-                        cell__inner-border-left__thick">
-                </td>
-                <td colspan="1"
-                    class="cell__outer-border-right__thick
-                        cell__inner-border-left__thick">
-                    $ 0
-                </td>
-            </tr>
-            <tr class="cost-sheet__other-direct-totals">
-                <th colspan="2"
-                    class="cell__outer-border-bottom__thick
-                        cell__inner-border-top__thick
-                        cell__outer-border-left__thick">
-                </th>
-                <td colspan="3" 
-                    class="cell__bg-color__not-applicable 
-                        cell__outer-border-bottom__thick
-                        cell__inner-border-top__thick
-                        cell__inner-border-left__thick">
-                </td>
-                <td colspan="1"
-                    class="cell__outer-border-right__thick
-                        cell__outer-border-bottom__thick
-                        cell__inner-border-top__thick
-                        cell__inner-border-left__thick
-                        cell__font__total-amount">
-                    $ 0
-                </td>
-            </tr>
-            <tr class="cost-sheet__table__overall-amount">
-                <th colspan="2" class="cell__border__none"></th>
-                <td colspan="3" class="cell__border__none"></td>
+
+<!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OVERALL TOTAL BEGIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+            <tr>
+                <th colspan="1" class="cell__border__none"></th>
+                <td colspan="{! primaryCostsLastCellIdx }"
+                    class="cell__border__none"></td>
                 <td colspan="1"
                     class="cell__border__none
                         cell__font__total-amount
                         cell__padding-top__large">
-                    $ 5603
+                    <apex:outputText value="{0, Number, Currency}">
+                        <apex:param value="{! overallTotal }">
+                        </apex:param>
+                    </apex:outputText>
                 </td>
             </tr>
         </tbody>
     </table>
-    <p class="debug">
-
-    </p>
+<!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OVERALL TOTAL END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
 
 </apex:page>

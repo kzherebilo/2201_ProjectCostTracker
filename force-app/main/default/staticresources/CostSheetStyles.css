@@ -17,10 +17,6 @@
     padding: 0.05in;
     padding-top: 0.02in;
     padding-bottom: 0.02in;
-    /* debug values */
-    /* padding-top: 2cm;
-    padding-bottom: 2cm; */
-    /* end of debug values */
 }
 .cost-sheet__table caption {
     font-size: large;
@@ -30,21 +26,19 @@
 .cost-sheet__table thead th {
     text-align: center;
 }
-.cost-sheet__table tbody th[colspan="2"] {
-    text-align: right;
-}
 .cost-sheet__table tbody td {
     text-align: right;
-    width: 13%;
 }
 
+.cost-sheet__table .cell__text-align__right {
+    text-align: right;
+}
 .cost-sheet__table .cell__font__total-amount {
     font-weight: bold;
 }
 .cost-sheet__table .cell__padding-top__large {
     padding-top: 0.15in;
 }
-
 .cost-sheet__table .cell__border__none {
     border: none;
 }
