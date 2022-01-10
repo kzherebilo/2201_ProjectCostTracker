@@ -3,6 +3,7 @@ public without sharing class CostSheetAsPdfExtensionHelper {
     public static final String PRIMARY_COSTS_TOTAL_ROW_NAME = '__SUBTOTAL__';
     public static final String SECONDARY_COSTS_TOTAL_ROW_NAME = '__SUBTOTAL__';
     public static final String ANY_COSTS_TOTAL_COLUMN_NAME = 'Total';
+    public static final Decimal DEFAULT_COST_COLUMN_WIDTH = 13.0;
 
     public static Map<String, List<Decimal>> getPrimaryCosts(ID projectId,
         List<String> primaryAccountNameList) {
@@ -17,13 +18,12 @@ public without sharing class CostSheetAsPdfExtensionHelper {
         }
 
         for (Project_Cost__c projectCost : [SELECT Amount__c, Class__r.Name,
-                Account_Line__r.Name, Account_Line__r.Category__c
+                Account_Line__r.Name, Account_Line__r.Cost_Type__c
                 FROM Project_Cost__c
                 WHERE Related_Project__r.Id =: projectId
                 AND Class__c != null AND Account_Line__c != null
-                AND Account_Line__r.Category__c = 'Primary']) {
+                AND Account_Line__r.Cost_Type__c = 'Primary_Project_Cost']) {
 
-            String accountCategory = projectCost.Account_Line__r.Category__c;
             String accountName = projectCost.Account_Line__r.Name;
             String costClass = projectCost.Class__r.Name;
             Integer columnIdx = 0;
@@ -63,17 +63,21 @@ public without sharing class CostSheetAsPdfExtensionHelper {
         Decimal totalAmount = 0.0;
 
         for (Project_Cost__c projectCost : [SELECT Amount__c,
-                Account_Line__r.Name, Account_Line__r.Category__c,
+                Account_Line__r.Name, Account_Line__r.Cost_Type__c,
                 Account_Line__r.Display_Name_with_hierarchy__c
-                FROM Project_Cost__c
-                WHERE Related_Project__r.Id =: projectId
+                FROM Project_Cost__c WHERE Related_Project__r.Id =: projectId
                 AND Account_Line__c != null
-                AND Account_Line__r.Category__c = 'Secondary']) {
+                AND Account_Line__r.Cost_Type__c = 'Project_Cost']) {
             
             String accountName
                 = projectCost.Account_Line__r.Display_Name_with_hierarchy__c;
-            if (!costMap.containsKey(accountName) && projectCost.Amount__c > 0.0) {
-                costMap.put(accountName, projectCost.Amount__c);
+            if (!costMap.containsKey(accountName)) {
+                if (projectCost.Amount__c > 0.0) {
+                    costMap.put(accountName, projectCost.Amount__c);
+                }
+            } else {
+                costMap.put(accountName, costMap.get(accountName) 
+                    + projectCost.Amount__c);
             }
         }
         for (String accountName : costMap.keySet()) {
@@ -88,9 +92,10 @@ public without sharing class CostSheetAsPdfExtensionHelper {
     public static List<String> getPrimaryAccountNames(ID projectId) {
         List<String> accountNames = new List<String> ();
         for (AggregateResult accountName : [SELECT Account_Line__r.Name
-                FROM Project_Cost__c WHERE Related_Project__r.Id =: projectId
+                FROM Project_Cost__c
+                WHERE Related_Project__r.Id =: projectId
                 AND Account_Line__c != null
-                AND Account_Line__r.Category__c = 'Primary'
+                AND Account_Line__r.Cost_Type__c = 'Primary_Project_Cost'
                 GROUP BY Account_Line__r.Name]) {
             accountNames.add((String) accountName.get('Name'));
         }

@@ -149,7 +149,8 @@
                         </apex:outputText>
                     </th>
                     <td colspan="{! primaryCostsLastCellIdx }"
-                        class="{! regularCellStyleClass }">
+                        class="{! regularCellStyleClass }"
+                        style="{! IF(primaryCostsLastCellIdx = 0, 'display: none', '') }">
                     </td>
                     <td colspan="1"
                         class="{! lastCellStyleClass }">
@@ -167,7 +168,9 @@
             <tr>
                 <th colspan="1" class="cell__border__none"></th>
                 <td colspan="{! primaryCostsLastCellIdx }"
-                    class="cell__border__none"></td>
+                    class="cell__border__none"
+                    style="{! IF(primaryCostsLastCellIdx = 0, 'display: none', '') }">
+                </td>
                 <td colspan="1"
                     class="cell__border__none
                         cell__font__total-amount

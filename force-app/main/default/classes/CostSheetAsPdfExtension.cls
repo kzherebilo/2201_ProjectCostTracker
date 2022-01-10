@@ -30,7 +30,9 @@ public without sharing class CostSheetAsPdfExtension {
     }
     public String primaryCostsCellWidth {
         get {
-            return String.valueOf(55 / (primaryCostsLastCellIdx + 1)) + '%';
+            Decimal width; 
+            width = CostSheetAsPdfExtensionHelper.DEFAULT_COST_COLUMN_WIDTH;
+            return String.valueOf(width) + '%';
         }
     }
     public String primaryCostsTotalRowName {
@@ -73,8 +75,8 @@ public without sharing class CostSheetAsPdfExtension {
     }
     public Boolean isEmptyTable {
         get {
-            return !(this.PRIMARY_COSTS.isEmpty()
-                || this.SECONDARY_COSTS.isEmpty());
+            return this.PRIMARY_COSTS.isEmpty()
+                && this.SECONDARY_COSTS.isEmpty();
         }
     }
     public String emptyTableMessage {
@@ -90,7 +92,8 @@ public without sharing class CostSheetAsPdfExtension {
 
 /******************************** CONSTRUCTOR *********************************/
     public CostSheetAsPdfExtension(ApexPages.StandardController controller) {
-        this.PROJECT_ID = (ID) controller.getRecord().Id;
+        //this.PROJECT_ID = (ID) controller.getRecord().Id;
+        this.PROJECT_ID = Apexpages.currentPage().getParameters().get('id');
         this.RENDERED_FILENAME = 'Cost-Sheet.pdf';
         this.PRIMARY_ACCOUNT_NAME_LIST
             = CostSheetAsPdfExtensionHelper.getPrimaryAccountNames(PROJECT_ID);
