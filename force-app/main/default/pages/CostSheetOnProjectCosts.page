@@ -1,0 +1,7 @@
+<apex:page showHeader="false" standardStylesheets="false"
+    standardController='Project_Cost__c' recordSetVar="projectCosts"
+    extensions="CostSheetOnProjectCostExt"
+    contentType="{! renderedContentType }" renderAs="PDF">
+
+    <c:CostSheetTable cProjectId="{! projectId }" />
+</apex:page>

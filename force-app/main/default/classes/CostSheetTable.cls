@@ -1,17 +1,14 @@
-public without sharing class CostSheetAsPdfExtension {
+public without sharing class CostSheetTable {
 
 /********************************* CONSTANTS **********************************/
     @TestVisible
-    private final String RENDERED_FILENAME;
+    private ID PROJECT_ID;
     @TestVisible
-    private final ID PROJECT_ID;
+    private List<String> PRIMARY_ACCOUNT_NAME_LIST;
     @TestVisible
-    private final List<String> PRIMARY_ACCOUNT_NAME_LIST;
+    private Map<String, List<Decimal>> PRIMARY_COSTS;
     @TestVisible
-    private final Map<String, List<Decimal>> PRIMARY_COSTS;
-    @TestVisible
-    private final Map<String, Decimal> SECONDARY_COSTS;
-
+    private Map<String, Decimal> SECONDARY_COSTS;
 
 /******************************** PROPERTIES **********************************/    
     public String renderedContentType { get; private set; }
@@ -84,31 +81,29 @@ public without sharing class CostSheetAsPdfExtension {
             return 'NO PROJECT COST FOUND';
         }
     }
+    public List<String> primaryAccountNames {
+        get {
+            return this.PRIMARY_ACCOUNT_NAME_LIST;
+        }
+    }
 
-/********************************** FIELDS ************************************/
+/********************************** METHODS ***********************************/
+    public ID getProjectId() {
+        return this.PROJECT_ID;
+    }
+    public void setProjectId(ID value) {
+        this.PROJECT_ID = value;
+        this.populateConstants();
+    }
 
-
-
-
-/******************************** CONSTRUCTOR *********************************/
-    public CostSheetAsPdfExtension(Apexpages.StandardController controller) {
-        //this.PROJECT_ID = (ID) controller.getRecord().Id;
-        this.PROJECT_ID = Apexpages.currentPage().getParameters().get('id');
-        this.RENDERED_FILENAME = 'Cost-Sheet.pdf';
+    @TestVisible
+    private void populateConstants() {
         this.PRIMARY_ACCOUNT_NAME_LIST
-            = CostSheetAsPdfExtensionHelper.getPrimaryAccountNames(PROJECT_ID);
+            = CostSheetAsPdfExtensionHelper.getPrimaryAccountNames(
+                this.PROJECT_ID);
         this.PRIMARY_COSTS = CostSheetAsPdfExtensionHelper.getPrimaryCosts(
             this.PROJECT_ID, this.PRIMARY_ACCOUNT_NAME_LIST);
         this.SECONDARY_COSTS = CostSheetAsPdfExtensionHelper.getSecondaryCosts(
             this.PROJECT_ID);
-        // Add a file name for the PDF file
-        // This is supposed to set the file name, but it doesn't work
-        renderedContentType = 'application/pdf#' + this.RENDERED_FILENAME;
-        // This is a work-around to set the file name
-        // ApexPages.currentPage().getHeaders().put('content-disposition',
-        //     'attachment; filename=' + this.RENDERED_FILENAME);
     }
-
-/********************************** METHODS ***********************************/
-
 }
