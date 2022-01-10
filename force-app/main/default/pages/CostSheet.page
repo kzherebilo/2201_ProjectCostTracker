@@ -1,5 +1,5 @@
 <apex:page showHeader="false" standardStylesheets="false"
-    standardController="Project__c" extensions="CostSheetAsPdfExtension"
+    controller="CostSheetAsPdfExtension"
     contentType="{! renderedContentType }" renderAs="PDF">
     
     <apex:stylesheet value="{!URLFOR($Resource.CostSheetStyles)}"/>
@@ -10,7 +10,7 @@
 
     <table class="cost-sheet__table"
         style="{! IF(isEmptyTable, 'display: none', '') }">
-        <caption>Cost Sheet for Project {! Project__c.Name }</caption>
+        <caption>Cost Sheet</caption>
 <!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABLE HEADER BEGIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
         <thead>
             <tr>

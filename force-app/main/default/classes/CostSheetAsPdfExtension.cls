@@ -91,7 +91,7 @@ public without sharing class CostSheetAsPdfExtension {
 
 
 /******************************** CONSTRUCTOR *********************************/
-    public CostSheetAsPdfExtension(ApexPages.StandardController controller) {
+    public CostSheetAsPdfExtension() {
         //this.PROJECT_ID = (ID) controller.getRecord().Id;
         this.PROJECT_ID = Apexpages.currentPage().getParameters().get('id');
         this.RENDERED_FILENAME = 'Cost-Sheet.pdf';
