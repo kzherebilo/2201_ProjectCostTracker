@@ -1,0 +1,19 @@
+h1 {
+    font-size: 16pt;
+    padding-bottom: 0px;
+    margin-bottom: 0;
+}
+h3 {
+    font-size: 12pt;
+}
+table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.companyLogo {
+    float: right;
+    padding-bottom: 0px;
+    margin-bottom: -20px;
+    width: 200px;
+    height: 100px;
+}

@@ -3,5 +3,7 @@
     extensions="CostSheetOnProjectCostExt"
     contentType="{! renderedContentType }" renderAs="PDF">
 
-    <c:CostSheetTable cProjectId="{! projectId }" />
+    <c:FixPadsHeader title="Project Cost Sheet"
+        projectName="{! project.Name }"/>
+    <c:CostSheetTable cProjectId="{! project.Id }" />
 </apex:page>

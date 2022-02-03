@@ -2,7 +2,7 @@
     language="en_US" selfClosing="true">
     
     <apex:attribute name="cProjectId" type="ID" required="true"
-        assignTo="{! projectId }" 
+        assignTo="{! projectId }"
         description="Project ID"/>
     <apex:stylesheet value="{!URLFOR($Resource.CostSheetStyles)}"/>
 
@@ -13,7 +13,8 @@
 
     <table class="cost-sheet__table"
         style="{! IF(isEmptyTable, 'display: none', '') }">
-        <caption>Cost Sheet</caption>
+        <!-- <caption>Cost Sheet</caption> -->
+        
 <!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABLE HEADER BEGIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
         <thead>
             <tr>
@@ -59,7 +60,7 @@
                     <apex:variable var="regularCellStyleClass"
                         value="cell__inner-border-top__thick 
                             cell__inner-border-bottom__thick
-                            cell__outer-border-left__thick
+                            cell__inner-border-left__thick
                             cell__font__total-amount"
                         rendered="{! costLineName = primaryCostsTotalRowName }">
                     </apex:variable>
