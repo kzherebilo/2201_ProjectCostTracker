@@ -3,20 +3,29 @@
 
     <apex:attribute name="title" type="String" required="true"
         description="Header title" />
-    <apex:attribute name="projectName" type="String" required="true"
-        description="Project name or internal ID" />
+    <apex:attribute name="subjectMajor" type="String" required="true"
+        description="Subject Line 1" />
+    <apex:attribute name="subjectMinor" type="String" required="false"
+        description="Subject Line 2" default="" />
+    <apex:attribute name="notes" type="String" required="false"
+        description="Additional notes" default="" />
+    
     <apex:stylesheet value="{!URLFOR($Resource.PrintStyles)}"/>
     <apex:stylesheet value="{!URLFOR($Resource.FixPadsHeaderStyles)}"/>
-
-    <table>
-        <tr>
-            <td>
-                <h1> {! title } </h1>
-                <h3> {! projectName } </h3>
-            </td>
-            <td>
-                <img class="companyLogo" src="{! $Resource.Logo_FixPads_PNG }" />
-            </td>
-        </tr>
-    </table>
+    
+	<div class="fixPadsHeader" >
+        <table>
+            <tr>
+                <td>
+                    <div class="title">{! title }</div>
+                    <div class="subject major">{! subjectMajor }</div>
+                    <div class="subject minor">{! subjectMinor }</div>
+                    <div class="notes">{! notes }</div>
+                </td>
+                <td>
+                    <img class="companyLogo" src="{! $Resource.Logo_FixPads_PNG }" />
+                </td>
+            </tr>
+        </table>
+    </div>
 </apex:component>

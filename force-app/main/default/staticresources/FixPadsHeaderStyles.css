@@ -1,16 +1,23 @@
-h1 {
+.fixPadsHeader .title {
     font-size: 16pt;
+    font-weight: bold;
     padding-bottom: 0px;
-    margin-bottom: 0;
+    margin-bottom: 5px;
 }
-h3 {
+.fixPadsHeader .subject {
     font-size: 12pt;
+    font-weight: bold;
 }
-table {
+.fixPadsHeader .notes {
+    font-size: 10pt;
+    white-space: pre;
+    margin-top: 7px;
+}
+.fixPadsHeader table {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
-.companyLogo {
+.fixPadsHeader .companyLogo {
     float: right;
     padding-bottom: 0px;
     margin-bottom: -20px;

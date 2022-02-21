@@ -4,6 +4,16 @@ public without sharing class CostSheetAsPdfExtensionHelper {
     public static final String SECONDARY_COSTS_TOTAL_ROW_NAME = '__SUBTOTAL__';
     public static final String ANY_COSTS_TOTAL_COLUMN_NAME = 'Total';
     public static final Decimal DEFAULT_COST_COLUMN_WIDTH = 13.0;
+    public static final String OTHER_DIRECT_SECTION_NAME = 'Other';
+
+    public class ProjectCostGroup {
+        @AuraEnabled public String accountMain;
+        @AuraEnabled public String accountExpence;
+        @AuraEnabled public String costClass;
+        @AuraEnabled public String costDate;
+        @AuraEnabled public String description;
+        @AuraEnabled public Double amount;
+    }
 
     public static Map<String, List<Decimal>> getPrimaryCosts(ID projectId,
         List<String> primaryAccountNameList) {
@@ -101,5 +111,47 @@ public without sharing class CostSheetAsPdfExtensionHelper {
         }
         accountNames.sort();
         return accountNames;
+    }
+
+    @AuraEnabled
+    public static Map<String, List<ProjectCostGroup>> getProjectCostsRecords(ID projectId) {
+        Map<String, List<ProjectCostGroup>> costMap = new Map<String, List<ProjectCostGroup>>();
+        List<String> primaryAccountNames = getPrimaryAccountNames(projectId);
+        List<Project_Cost__c> costList = [ SELECT Amount__c, Class__r.Name, Date__c,
+            Description__c, Account_Line__r.Name, Account_Line__r.Cost_Type__c,
+            Account_Line__r.Display_Name_with_hierarchy__c
+            FROM Project_Cost__c
+            WHERE Related_Project__r.Id =: projectId
+            AND Account_Line__c != null
+            AND ((Account_Line__r.Cost_Type__c = 'Primary_Project_Cost' AND Class__c != null)
+                OR Account_Line__r.Cost_Type__c = 'Project_Cost') ];
+        if (costList == null || costList.isEmpty()) return costMap;
+        if(!primaryAccountNames.isEmpty()) {
+            for(String accountName : primaryAccountNames) {
+                costMap.put(accountName, new List<ProjectCostGroup>());
+            }
+        }
+        for(Project_Cost__c cost : costList) {
+            ProjectCostGroup costGroup = new ProjectCostGroup ();
+            String accountMain = cost.Account_Line__r.Display_Name_with_hierarchy__c;
+            if (String.isNotBlank(accountMain)) {
+                accountMain = accountMain.split(':')[0].trim();
+                costGroup.accountMain = accountMain;
+            }
+            costGroup.accountExpence = cost.Account_Line__r.Name;
+            costGroup.costClass = cost.Class__r.Name;
+            costGroup.costDate = String.valueOf(cost.Date__c);
+            costGroup.amount = cost.Amount__c;
+            costGroup.description = cost.Description__c;
+            if(cost.Account_Line__r.Cost_Type__c == 'Primary_Project_Cost') {
+                costMap.get(cost.Account_Line__r.Name).add(costGroup);
+            } else {
+                if (!costMap.containsKey(OTHER_DIRECT_SECTION_NAME)) {
+                    costMap.put(OTHER_DIRECT_SECTION_NAME, new List<ProjectCostGroup>());
+                }
+                costMap.get(OTHER_DIRECT_SECTION_NAME).add(costGroup);
+            }
+        }
+        return costMap;
     }
 }

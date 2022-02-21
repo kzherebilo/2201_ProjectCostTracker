@@ -1,9 +1,11 @@
-<apex:page showHeader="false" standardStylesheets="false"
-    standardController='Project_Cost__c' recordSetVar="projectCosts"
-    extensions="CostSheetOnProjectCostExt"
-    contentType="{! renderedContentType }" renderAs="PDF">
+<apex:page standardController='Project_Cost__c'
+           extensions="CostSheetOnProjectCostExt"
+           recordSetVar="projectCosts"
+           showHeader="false"
+           standardStylesheets="false" 
+           renderAs="pdf" >
 
-    <c:FixPadsHeader title="Project Cost Sheet"
-        projectName="{! project.Name }"/>
+    <c:FixPadsHeader title="{! documentTitle }"
+                     subjectMajor="{! project.Name }"/>
     <c:CostSheetTable cProjectId="{! project.Id }" />
 </apex:page>

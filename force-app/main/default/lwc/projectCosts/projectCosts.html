@@ -1,0 +1,46 @@
+<template>
+    <lightning-button label="Expand All"
+                      title="Expand All"
+                      onclick={onExpandAllHandler}
+                      class="slds-m-left_x-small">
+    </lightning-button>
+    <lightning-button label="Collapse All"
+                      title="Collapse All"
+                      onclick={onCollapseAllHandler}
+                      class="slds-m-left_x-small">
+    </lightning-button>
+    <lightning-accordion allow-multiple-sections-open="true" for:index="index" class="project-costs">
+        <template for:each={costs} for:item="cost" >
+            <lightning-accordion-section key={index} name={cost.section} label={cost.section} >
+                <lightning-datatable key-field="id"
+                                     aria-label={cost.section}
+                                     columns={columns}
+                                     data={cost.data}
+                                     hide-checkbox-column="true"
+                                     resize-column-disabled="true"
+                                     default-sort-direction={defaultSortDirection}
+                                     sorted-direction={cost.sortDirection}
+                                     sorted-by={cost.sortedBy}
+                                     onsort={onSortHandler} >
+                </lightning-datatable>
+                <div class="subtotal" style="margin: 10px; text-align: right;">
+                    <lightning-formatted-number value={cost.subtotal}
+                                                format-style="currency"
+                                                currency-code="USD"
+                                                style="font-weight: bold;">
+                    </lightning-formatted-number>
+                </div>
+            </lightning-accordion-section>
+        </template>
+    </lightning-accordion>
+    <lightning-button label="Expand All"
+                      title="Expand All"
+                      onclick={onExpandAllHandler}
+                      class="slds-m-left_x-small">
+    </lightning-button>
+    <lightning-button label="Collapse All"
+                      title="Collapse All"
+                      onclick={onCollapseAllHandler}
+                      class="slds-m-left_x-small">
+    </lightning-button>
+</template>
