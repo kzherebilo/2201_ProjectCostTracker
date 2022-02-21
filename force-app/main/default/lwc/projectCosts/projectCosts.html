@@ -1,15 +1,17 @@
 <template>
-    <lightning-button label="Expand All"
-                      title="Expand All"
-                      onclick={onExpandAllHandler}
-                      class="slds-m-left_x-small">
-    </lightning-button>
-    <lightning-button label="Collapse All"
-                      title="Collapse All"
-                      onclick={onCollapseAllHandler}
-                      class="slds-m-left_x-small">
-    </lightning-button>
-    <lightning-accordion allow-multiple-sections-open="true" for:index="index" class="project-costs">
+    <template if:true={isCostsListNotEmpty}>
+        <div style="margin-top: 10px; margin-bottom: 10px;">
+            <lightning-button label={collapseExpandAllButtonLabel}
+                              title="Collapse Expand All"
+                              onclick={onCollapseExpandAllHandler}
+                              class="slds-m-left_x-small">
+            </lightning-button>
+        </div>
+    </template>
+    <lightning-accordion allow-multiple-sections-open="true" 
+                         for:index="index"
+                         class="project-costs"
+                         onsectiontoggle={onSectionToggleHandler}>
         <template for:each={costs} for:item="cost" >
             <lightning-accordion-section key={index} name={cost.section} label={cost.section} >
                 <lightning-datatable key-field="id"
@@ -23,24 +25,43 @@
                                      sorted-by={cost.sortedBy}
                                      onsort={onSortHandler} >
                 </lightning-datatable>
-                <div class="subtotal" style="margin: 10px; text-align: right;">
-                    <lightning-formatted-number value={cost.subtotal}
-                                                format-style="currency"
-                                                currency-code="USD"
-                                                style="font-weight: bold;">
-                    </lightning-formatted-number>
+                <div class="slds-grid slds-gutters" >
+                    <div class="slds-col">
+                        <lightning-button label="Collapse"
+                                          title="Collapse Section"
+                                          aria-label={cost.section}
+                                          onclick={onCollapseSectionHandler}
+                                          variant="base"
+                                          class="slds-m-left_x-small">
+                        </lightning-button>
+                        <!-- <template if:true={cost.showHiddenRowsLabel} >
+                            <lightning-button label={cost.showHiddenRowsLabel}
+                                            title="Show Hidden Rows"
+                                            aria-label={cost.section}
+                                            onclick={onShowHiddenRowsHandler}
+                                            variant="base"
+                                            class="slds-m-left_x-small">
+                            </lightning-button>
+                        </template> -->
+                    </div>
+                    <div class="slds-col" style="margin: 10px; text-align: right;">
+                        <lightning-formatted-number value={cost.subtotal}
+                                                    format-style="currency"
+                                                    currency-code="USD"
+                                                    style="font-weight: bold;">
+                        </lightning-formatted-number>
+                    </div>
                 </div>
             </lightning-accordion-section>
         </template>
     </lightning-accordion>
-    <lightning-button label="Expand All"
-                      title="Expand All"
-                      onclick={onExpandAllHandler}
-                      class="slds-m-left_x-small">
-    </lightning-button>
-    <lightning-button label="Collapse All"
-                      title="Collapse All"
-                      onclick={onCollapseAllHandler}
-                      class="slds-m-left_x-small">
-    </lightning-button>
+    <template if:true={isCostsListNotEmpty} >
+        <div style="margin-top: 10px; margin-bottom: 10px;">
+            <lightning-button label={collapseExpandAllButtonLabel}
+                              title="Collapse Expand All"
+                              onclick={onCollapseExpandAllHandler}
+                              class="slds-m-left_x-small">
+            </lightning-button>
+        </div>
+    </template>
 </template>

@@ -7,10 +7,11 @@ public without sharing class CostSheetAsPdfExtensionHelper {
     public static final String OTHER_DIRECT_SECTION_NAME = 'Other';
 
     public class ProjectCostGroup {
+        @AuraEnabled public String vendor;
         @AuraEnabled public String accountMain;
-        @AuraEnabled public String accountExpence;
+        @AuraEnabled public String accountExpense;
         @AuraEnabled public String costClass;
-        @AuraEnabled public String costDate;
+        @AuraEnabled public Date costDate;
         @AuraEnabled public String description;
         @AuraEnabled public Double amount;
     }
@@ -119,7 +120,7 @@ public without sharing class CostSheetAsPdfExtensionHelper {
         List<String> primaryAccountNames = getPrimaryAccountNames(projectId);
         List<Project_Cost__c> costList = [ SELECT Amount__c, Class__r.Name, Date__c,
             Description__c, Account_Line__r.Name, Account_Line__r.Cost_Type__c,
-            Account_Line__r.Display_Name_with_hierarchy__c
+            Vendor__r.Name, Account_Main__r.Name
             FROM Project_Cost__c
             WHERE Related_Project__r.Id =: projectId
             AND Account_Line__c != null
@@ -133,14 +134,11 @@ public without sharing class CostSheetAsPdfExtensionHelper {
         }
         for(Project_Cost__c cost : costList) {
             ProjectCostGroup costGroup = new ProjectCostGroup ();
-            String accountMain = cost.Account_Line__r.Display_Name_with_hierarchy__c;
-            if (String.isNotBlank(accountMain)) {
-                accountMain = accountMain.split(':')[0].trim();
-                costGroup.accountMain = accountMain;
-            }
-            costGroup.accountExpence = cost.Account_Line__r.Name;
+            costGroup.vendor = cost.Vendor__r.Name;
+            costGroup.accountMain = cost.Account_Main__r.Name;
+            costGroup.accountExpense = cost.Account_Line__r.Name;
             costGroup.costClass = cost.Class__r.Name;
-            costGroup.costDate = String.valueOf(cost.Date__c);
+            costGroup.costDate = cost.Date__c;
             costGroup.amount = cost.Amount__c;
             costGroup.description = cost.Description__c;
             if(cost.Account_Line__r.Cost_Type__c == 'Primary_Project_Cost') {

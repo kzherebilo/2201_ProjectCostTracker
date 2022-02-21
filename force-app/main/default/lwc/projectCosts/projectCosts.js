@@ -1,7 +1,15 @@
 import { LightningElement, api, track } from 'lwc';
 import getProjectCostsRecords from '@salesforce/apex/CostSheetAsPdfExtensionHelper.getProjectCostsRecords';
 
-const columns = [
+const COLUMNS = [
+    {
+        label: 'Vendor',
+        fieldName: 'vendor',
+        type: 'text',
+        sortable: true,
+        wrapText: true,
+        cellAttributes: { alignment: 'left' }
+    },
     {
         label: 'Account (Main)',
         fieldName: 'accountMain',
@@ -11,8 +19,8 @@ const columns = [
         cellAttributes: { alignment: 'left' }
     },
     {
-        label: 'Account (Expence)',
-        fieldName: 'accountExpence',
+        label: 'Account (Expense)',
+        fieldName: 'accountExpense',
         type: 'string',
         sortable: false,
         cellAttributes: { alignment: 'left' }
@@ -27,9 +35,13 @@ const columns = [
     {
         label: 'Date',
         fieldName: 'costDate',
-        type: 'text',
+        type: 'date-local',
         sortable: true,
-        cellAttributes: { alignment: 'left' }
+        cellAttributes: { alignment: 'left' },
+        typeAttributes: {
+            month: "2-digit",
+            day: "2-digit"
+        }
     },
     {
         label: 'Notes',
@@ -44,18 +56,23 @@ const columns = [
         fieldName: 'amount',
         type: 'currency',
         sortable: true,
-        cellAttributes: {
-            alignment: 'right',
+        cellAttributes: { alignment: 'right' },
+        typeAttributes: {
             currencyCode: 'USD',
-            step: '0.01' }
+            step: '0.01' 
+        }
     }
 ]
 
+const DEFAULT_NUMBER_OF_ROWS = 5;
+
 export default class ProjectCosts extends LightningElement {
     
-    columns = columns;
+    columns = COLUMNS;
     defaultSortDirection = 'asc';
-    costs = [];
+    costs;
+    isCostsListNotEmpty;
+    collapseExpandAllButtonLabel = 'Expand All';
 
     @api
     recordId;
@@ -72,6 +89,12 @@ export default class ProjectCosts extends LightningElement {
         let costs = [];
         for (const [key, records] of Object.entries(costMap)) {
             let subtotal = 0.0;
+            let rowsToHide = 0;
+            let showHiddenRowsLabel;
+            if (records.length > DEFAULT_NUMBER_OF_ROWS) {
+                rowsToHide = records.length - DEFAULT_NUMBER_OF_ROWS;
+                showHiddenRowsLabel = 'Show more (' + rowsToHide + ' rows)';
+            }
             for (const record of records) {
                 subtotal += record.amount;
             }
@@ -80,10 +103,12 @@ export default class ProjectCosts extends LightningElement {
                 data: records,
                 subtotal: subtotal,
                 sortDirection: 'asc',
-                sortedBy: null
+                sortedBy: null,
+                showHiddenRowsLabel: showHiddenRowsLabel
             });
         }
         this.costs = costs;
+        this.isCostsListNotEmpty = (costs.length > 0);
     }
 
     sortBy(field, reverse, primer) {
@@ -116,16 +141,42 @@ export default class ProjectCosts extends LightningElement {
         this.costs = cloneCosts;
     }
 
-    onExpandAllHandler() {
+    onCollapseExpandAllHandler(event) {
         let accordion = this.template.querySelector(".project-costs");
-        let openSections = [];
-        this.costs.forEach(function(costGroup) {
-            openSections.push(costGroup.section);
-        })
+        let openSections = accordion.activeSectionName;
+        if (openSections.length > 0) {
+            openSections = [];
+        } else {
+            this.costs.forEach(function(costGroup) {
+                openSections.push(costGroup.section);
+            });
+        }
         accordion.activeSectionName = openSections;
+        this.setCollapseExpandButtonLabel(openSections);
     }
-    onCollapseAllHandler() {
+
+    onCollapseSectionHandler(event) {
+        console.log(event.target.ariaLabel);
+        if (event.target.ariaLabel == null) return;
+        const tableLabel = event.target.ariaLabel.split(' ')[0].trim();
         let accordion = this.template.querySelector(".project-costs");
-        accordion.activeSectionName = [];
+        let openSections = [...accordion.activeSectionName];
+        openSections.splice(openSections.indexOf(tableLabel), 1);
+        accordion.activeSectionName = openSections;
+        this.setCollapseExpandButtonLabel(openSections);
     }
+
+    onSectionToggleHandler(event) {
+        let openSections = event.target.activeSectionName;
+        this.setCollapseExpandButtonLabel(openSections);
+    }
+
+    setCollapseExpandButtonLabel(openSections) {
+        if (openSections.length > 0) {
+            this.collapseExpandAllButtonLabel = 'Collapse All';
+        } else {
+            this.collapseExpandAllButtonLabel = 'Expand All';
+        }
+    }
+
 }
