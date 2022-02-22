@@ -1,11 +1,25 @@
 <template>
+    <template if:true={isComponentLoading} >
+        <div style="height: 80px; position: relative;" >
+            <lightning-spinner alternative-text="Loading"
+                               size="medium"
+                               variant="brand" >
+            </lightning-spinner>
+        </div>
+    </template>
     <template if:true={isCostsListNotEmpty}>
-        <div style="margin-top: 10px; margin-bottom: 10px;">
-            <lightning-button label={collapseExpandAllButtonLabel}
-                              title="Collapse Expand All"
-                              onclick={onCollapseExpandAllHandler}
-                              class="slds-m-left_x-small">
-            </lightning-button>
+        <div class="slds-m-around_x-small" style="text-align: right;">
+            <lightning-button-group>
+                <lightning-button label={collapseExpandAllButtonLabel}
+                                  title="Collapse Expand All"
+                                  onclick={onCollapseExpandAllHandler} >
+                </lightning-button>
+                <lightning-button label="Project Costs (PDF)"
+                                  title="Project Costs (PDF)"
+                                  onclick={onProjectCostsPDFHandler}
+                                  variant="brand">
+                </lightning-button>
+            </lightning-button-group>
         </div>
     </template>
     <lightning-accordion allow-multiple-sections-open="true" 
@@ -13,7 +27,7 @@
                          class="project-costs"
                          onsectiontoggle={onSectionToggleHandler}>
         <template for:each={costs} for:item="cost" >
-            <lightning-accordion-section key={index} name={cost.section} label={cost.section} >
+            <lightning-accordion-section key={index} name={cost.section} label={cost.sectionLabel} >
                 <lightning-datatable key-field="id"
                                      aria-label={cost.section}
                                      columns={columns}
@@ -34,15 +48,6 @@
                                           variant="base"
                                           class="slds-m-left_x-small">
                         </lightning-button>
-                        <!-- <template if:true={cost.showHiddenRowsLabel} >
-                            <lightning-button label={cost.showHiddenRowsLabel}
-                                            title="Show Hidden Rows"
-                                            aria-label={cost.section}
-                                            onclick={onShowHiddenRowsHandler}
-                                            variant="base"
-                                            class="slds-m-left_x-small">
-                            </lightning-button>
-                        </template> -->
                     </div>
                     <div class="slds-col" style="margin: 10px; text-align: right;">
                         <lightning-formatted-number value={cost.subtotal}
@@ -56,12 +61,18 @@
         </template>
     </lightning-accordion>
     <template if:true={isCostsListNotEmpty} >
-        <div style="margin-top: 10px; margin-bottom: 10px;">
-            <lightning-button label={collapseExpandAllButtonLabel}
-                              title="Collapse Expand All"
-                              onclick={onCollapseExpandAllHandler}
-                              class="slds-m-left_x-small">
-            </lightning-button>
+        <div class="slds-m-around_x-small" style="text-align: right;">
+            <lightning-button-group>
+                <lightning-button label={collapseExpandAllButtonLabel}
+                                  title="Collapse Expand All"
+                                  onclick={onCollapseExpandAllHandler} >
+                </lightning-button>
+                <lightning-button label="Project Costs (PDF)"
+                                  title="Project Costs (PDF)"
+                                  onclick={onProjectCostsPDFHandler}
+                                  variant="brand">
+                </lightning-button>
+            </lightning-button-group>
         </div>
     </template>
 </template>

@@ -7,7 +7,8 @@ public without sharing class CostSheetAsPdfExtensionHelper {
     public static final String OTHER_DIRECT_SECTION_NAME = 'Other';
 
     public class ProjectCostGroup {
-        @AuraEnabled public String vendor;
+        @AuraEnabled public String vendorUrl;
+        @AuraEnabled public String vendorName;
         @AuraEnabled public String accountMain;
         @AuraEnabled public String accountExpense;
         @AuraEnabled public String costClass;
@@ -120,7 +121,7 @@ public without sharing class CostSheetAsPdfExtensionHelper {
         List<String> primaryAccountNames = getPrimaryAccountNames(projectId);
         List<Project_Cost__c> costList = [ SELECT Amount__c, Class__r.Name, Date__c,
             Description__c, Account_Line__r.Name, Account_Line__r.Cost_Type__c,
-            Vendor__r.Name, Account_Main__r.Name
+            Vendor__r.Name, Vendor__c, Account_Main__r.Name
             FROM Project_Cost__c
             WHERE Related_Project__r.Id =: projectId
             AND Account_Line__c != null
@@ -134,7 +135,8 @@ public without sharing class CostSheetAsPdfExtensionHelper {
         }
         for(Project_Cost__c cost : costList) {
             ProjectCostGroup costGroup = new ProjectCostGroup ();
-            costGroup.vendor = cost.Vendor__r.Name;
+            costGroup.vendorUrl = cost.Vendor__c != null ? '/' + cost.Vendor__c : null;
+            costGroup.vendorName = cost.Vendor__r.Name;
             costGroup.accountMain = cost.Account_Main__r.Name;
             costGroup.accountExpense = cost.Account_Line__r.Name;
             costGroup.costClass = cost.Class__r.Name;

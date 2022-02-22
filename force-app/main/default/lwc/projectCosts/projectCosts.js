@@ -1,14 +1,20 @@
 import { LightningElement, api, track } from 'lwc';
 import getProjectCostsRecords from '@salesforce/apex/CostSheetAsPdfExtensionHelper.getProjectCostsRecords';
+import { NavigationMixin } from 'lightning/navigation';
 
 const COLUMNS = [
     {
         label: 'Vendor',
-        fieldName: 'vendor',
-        type: 'text',
+        fieldName: 'vendorUrl',
+        type: 'url',
         sortable: true,
         wrapText: true,
-        cellAttributes: { alignment: 'left' }
+        cellAttributes: { alignment: 'left' },
+        typeAttributes: { 
+            label: {
+                fieldName: 'vendorName'
+            }
+        }
     },
     {
         label: 'Account (Main)',
@@ -64,14 +70,14 @@ const COLUMNS = [
     }
 ]
 
-const DEFAULT_NUMBER_OF_ROWS = 5;
 
-export default class ProjectCosts extends LightningElement {
+export default class ProjectCosts extends NavigationMixin(LightningElement) {
     
+    costs;
     columns = COLUMNS;
     defaultSortDirection = 'asc';
-    costs;
-    isCostsListNotEmpty;
+    isCostsListNotEmpty = false;
+    isComponentLoading = true;
     collapseExpandAllButtonLabel = 'Expand All';
 
     @api
@@ -81,30 +87,34 @@ export default class ProjectCosts extends LightningElement {
         getProjectCostsRecords({ projectId: this.recordId})
             .then(costMap => {
                 this.processProjectCosts(costMap);
+                this.isComponentLoading = false;
+            })
+            .catch(error => {
+                console.log(error);
             });
     }
 
     processProjectCosts(costMap) {
         if (costMap == null) return;
+        let toUSD = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        });
         let costs = [];
         for (const [key, records] of Object.entries(costMap)) {
             let subtotal = 0.0;
-            let rowsToHide = 0;
-            let showHiddenRowsLabel;
-            if (records.length > DEFAULT_NUMBER_OF_ROWS) {
-                rowsToHide = records.length - DEFAULT_NUMBER_OF_ROWS;
-                showHiddenRowsLabel = 'Show more (' + rowsToHide + ' rows)';
-            }
             for (const record of records) {
                 subtotal += record.amount;
             }
+            const sectionLabel = key + '    ('
+                + toUSD.format(subtotal) + ')';
             costs.push({ 
                 section: key,
+                sectionLabel: sectionLabel, 
                 data: records,
                 subtotal: subtotal,
                 sortDirection: 'asc',
-                sortedBy: null,
-                showHiddenRowsLabel: showHiddenRowsLabel
+                sortedBy: null
             });
         }
         this.costs = costs;
@@ -177,6 +187,17 @@ export default class ProjectCosts extends LightningElement {
         } else {
             this.collapseExpandAllButtonLabel = 'Expand All';
         }
+    }
+
+    onProjectCostsPDFHandler() {
+        let costSheetPageUrl = '/apex/CostSheetOnProjectCosts?id='
+            + this.recordId;
+        this[NavigationMixin.Navigate] ({
+            type: 'standard__webPage',
+            attributes: {
+                url: costSheetPageUrl
+            }
+        });
     }
 
 }
