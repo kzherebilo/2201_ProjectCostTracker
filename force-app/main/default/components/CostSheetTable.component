@@ -1,44 +1,50 @@
-<apex:component access="public" allowDML="false" controller="CostSheetTable"
-    language="en_US" selfClosing="true">
+<apex:component access="public" 
+                allowDML="false" 
+                controller="CostSheetTable"
+                language="en_US"
+                selfClosing="true">
     
-    <apex:attribute name="cProjectId" type="ID" required="true"
-        assignTo="{! projectId }"
-        description="Project ID"/>
+    <apex:attribute name="cProjectId"
+                    type="ID"
+                    required="true"
+                    assignTo="{! projectId }"
+                    description="Project ID"/>
+
     <apex:stylesheet value="{!URLFOR($Resource.CostSheetStyles)}"/>
 
     <apex:outputText rendered="{! isEmptyTable }">
-      {! emptyTableMessage }
+        {! emptyTableMessage }
     </apex:outputText>
 
 
     <table class="cost-sheet__table"
-        style="{! IF(isEmptyTable, 'display: none', '') }">
-        <!-- <caption>Cost Sheet</caption> -->
+           style="{! IF(isEmptyTable, 'display: none', '') }">
         
 <!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABLE HEADER BEGIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
         <thead>
             <tr>
-                <apex:variable var="cellIndex" value="{! 0 }"></apex:variable>
+                <apex:variable var="cellIndex" value="{! 0 }">
+                </apex:variable>
                 <apex:variable var="regularCellStyleClass"
-                    value="cell__outer-border-top__thick
-                        cell__inner-border-bottom__thick
-                        cell__inner-border-left__thick">
+                               value="cell__outer-border-top__thick
+                                      cell__inner-border-bottom__thick
+                                      cell__inner-border-left__thick">
                 </apex:variable>
                 <apex:variable var="lastCellStyleClass"
-                    value="cell__outer-border-top__thick
-                        cell__outer-border-right__thick
-                        cell__inner-border-bottom__thick
-                        cell__inner-border-left__thick">
+                               value="cell__outer-border-top__thick
+                                      cell__outer-border-right__thick
+                                      cell__inner-border-bottom__thick
+                                      cell__inner-border-left__thick">
                 </apex:variable>
                 <th scope="col" colspan="1"
                     class="cell__outer-border-left__thick
-                        cell__outer-border-top__thick
-                        cell__inner-border-bottom__thick">
+                           cell__outer-border-top__thick
+                           cell__inner-border-bottom__thick">
                     <!-- HEADER EMPTY CELL -->
                 </th>
                 <apex:repeat value="{! primaryCostsHeaderList }" var="name" >
                     <th class="{! IF(cellIndex = primaryCostsLastCellIdx,
-                        lastCellStyleClass, regularCellStyleClass) }"
+                               lastCellStyleClass, regularCellStyleClass) }"
                         style="width: {! primaryCostsCellWidth }">
                         {! name }
                     </th>
@@ -51,42 +57,44 @@
 
 <!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRIMARY COSTS BEGIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
         <tbody>
-            <apex:repeat value="{! primaryCosts }" var="costLineName">
+            <apex:repeat value="{! primaryCosts }"
+                         var="costLineName">
                 <tr>
-                    <apex:variable var="cellIndex" value="{! 0 }"></apex:variable>
-                    <apex:variable var="regularCellStyleClass"
-                        value="cell__inner-border-left__thick">
+                    <apex:variable var="cellIndex" value="{! 0 }">
                     </apex:variable>
                     <apex:variable var="regularCellStyleClass"
-                        value="cell__inner-border-top__thick 
-                            cell__inner-border-bottom__thick
-                            cell__inner-border-left__thick
-                            cell__font__total-amount"
-                        rendered="{! costLineName = primaryCostsTotalRowName }">
+                                   value="cell__inner-border-left__thick">
+                    </apex:variable>
+                    <apex:variable var="regularCellStyleClass"
+                                   value="cell__inner-border-top__thick 
+                                          cell__inner-border-bottom__thick
+                                          cell__inner-border-left__thick
+                                          cell__font__total-amount"
+                                    rendered="{! costLineName = primaryCostsTotalRowName }">
                     </apex:variable>
                     <apex:variable var="lastCellStyleClass"
-                        value="cell__inner-border-left__thick
-                            cell__outer-border-right__thick
-                            cell__font__total-amount">
+                                   value="cell__inner-border-left__thick
+                                          cell__outer-border-right__thick
+                                          cell__font__total-amount">
                     </apex:variable>
                     <apex:variable var="lastCellStyleClass"
-                        value="cell__inner-border-top__thick 
-                            cell__inner-border-bottom__thick
-                            cell__outer-border-right__thick
-                            cell__inner-border-left__thick
-                            cell__font__total-amount"
-                        rendered="{! costLineName = primaryCostsTotalRowName }">
+                                   value="cell__inner-border-top__thick 
+                                          cell__inner-border-bottom__thick
+                                          cell__outer-border-right__thick
+                                          cell__inner-border-left__thick
+                                          cell__font__total-amount"
+                                   rendered="{! costLineName = primaryCostsTotalRowName }">
                     </apex:variable>
                     <apex:variable var="headerCellStyleClass"
-                        value="cell__outer-border-left__thick
-                            cell__text-align__right">
+                                   value="cell__outer-border-left__thick
+                                          cell__text-align__right">
                     </apex:variable>
                     <apex:variable var="headerCellStyleClass"
-                        value="cell__inner-border-top__thick 
-                            cell__inner-border-bottom__thick
-                            cell__outer-border-left__thick
-                            cell__text-align__right"
-                        rendered="{! costLineName = primaryCostsTotalRowName }">
+                                   value="cell__inner-border-top__thick 
+                                          cell__inner-border-bottom__thick
+                                          cell__outer-border-left__thick
+                                          cell__text-align__right"
+                                   rendered="{! costLineName = primaryCostsTotalRowName }">
                     </apex:variable>
                     <th scope="row" colspan="1"
                         class="{! headerCellStyleClass }">
@@ -97,7 +105,7 @@
                     </th>
                     <apex:repeat value="{! primaryCosts[costLineName] }" var="costValue" >
                         <td class="{! IF(cellIndex = primaryCostsLastCellIdx,
-                            lastCellStyleClass, regularCellStyleClass) }"
+                                    lastCellStyleClass, regularCellStyleClass) }"
                             style="width: {! primaryCostsCellWidth }">
                             <apex:outputText value="{0, Number, Currency}">
                                 <apex:param value="{! costValue }">
@@ -114,36 +122,36 @@
             <apex:repeat value="{! secondaryCosts }" var="costLineName">
                 <tr>
                     <apex:variable var="headerCellStyleClass"
-                        value="cell__outer-border-left__thick">
+                                   value="cell__outer-border-left__thick">
                     </apex:variable>
                     <apex:variable var="headerCellStyleClass"
-                        value="cell__outer-border-bottom__thick
-                            cell__inner-border-top__thick
-                            cell__outer-border-left__thick"
-                        rendered="{! costLineName = secondaryCostsTotalRowName }">
+                                   value="cell__outer-border-bottom__thick
+                                          cell__inner-border-top__thick
+                                          cell__outer-border-left__thick"
+                                   rendered="{! costLineName = secondaryCostsTotalRowName }">
                     </apex:variable>
                     <apex:variable var="regularCellStyleClass"
-                        value="cell__bg-color__not-applicable
-                            cell__inner-border-left__thick">
+                                   value="cell__bg-color__not-applicable
+                                          cell__inner-border-left__thick">
                     </apex:variable>
                     <apex:variable var="regularCellStyleClass"
-                        value="cell__bg-color__not-applicable 
-                            cell__outer-border-bottom__thick
-                            cell__inner-border-top__thick
-                            cell__inner-border-left__thick"
-                        rendered="{! costLineName = secondaryCostsTotalRowName }">
+                                   value="cell__bg-color__not-applicable 
+                                          cell__outer-border-bottom__thick
+                                          cell__inner-border-top__thick
+                                          cell__inner-border-left__thick"
+                                   rendered="{! costLineName = secondaryCostsTotalRowName }">
                     </apex:variable>
                     <apex:variable var="lastCellStyleClass"
-                        value="cell__outer-border-right__thick
-                            cell__inner-border-left__thick">
+                                   value="cell__outer-border-right__thick
+                                          cell__inner-border-left__thick">
                     </apex:variable>
                     <apex:variable var="lastCellStyleClass"
-                        value="cell__outer-border-right__thick
-                            cell__outer-border-bottom__thick
-                            cell__inner-border-top__thick
-                            cell__inner-border-left__thick
-                            cell__font__total-amount"
-                        rendered="{! costLineName = secondaryCostsTotalRowName }">
+                                   value="cell__outer-border-right__thick
+                                          cell__outer-border-bottom__thick
+                                          cell__inner-border-top__thick
+                                          cell__inner-border-left__thick
+                                          cell__font__total-amount"
+                                   rendered="{! costLineName = secondaryCostsTotalRowName }">
                     </apex:variable>
                     <th scope="row" colspan="1"
                         class="{! headerCellStyleClass }">
@@ -177,8 +185,8 @@
                 </td>
                 <td colspan="1"
                     class="cell__border__none
-                        cell__font__total-amount
-                        cell__padding-top__large">
+                           cell__font__total-amount
+                           cell__padding-top__large">
                     <apex:outputText value="{0, Number, Currency}">
                         <apex:param value="{! overallTotal }">
                         </apex:param>

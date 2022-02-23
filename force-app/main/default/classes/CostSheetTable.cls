@@ -11,7 +11,7 @@ public without sharing class CostSheetTable {
     private Map<String, Decimal> SECONDARY_COSTS;
 
 /******************************** PROPERTIES **********************************/    
-    public String renderedContentType { get; private set; }
+
     public Map<String, List<Decimal>> primaryCosts {
         get {
             return this.PRIMARY_COSTS;

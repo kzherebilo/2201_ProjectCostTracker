@@ -20,8 +20,7 @@ public without sharing class ProjectCostHelper {
         List<Project_Cost__c> costList = [
             SELECT Amount__c,
                    Class__r.Name,
-                   Account_Line__r.Name,
-                   Account_Line__r.Cost_Type__c
+                   Account_Line__r.Name
             FROM Project_Cost__c
             WHERE Related_Project__r.Id =: projectId
                 AND Class__c != null AND Account_Line__c != null
@@ -186,7 +185,7 @@ public without sharing class ProjectCostHelper {
 /*                        LWC RELATED INNER CLASSES                           */
 /*                                                                            */
 /******************************************************************************/
-
+    
     public class ProjectCostWrapper {
         @AuraEnabled public String vendorUrl;
         @AuraEnabled public String vendorName;
