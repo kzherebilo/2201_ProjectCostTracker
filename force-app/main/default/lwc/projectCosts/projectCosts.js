@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import getProjectCostsRecords from '@salesforce/apex/CostSheetAsPdfExtensionHelper.getProjectCostsRecords';
+import getProjectCostsRecords from '@salesforce/apex/ProjectCostHelper.getProjectCostsRecords';
 import { NavigationMixin } from 'lightning/navigation';
 
 const COLUMNS = [
@@ -190,8 +190,7 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
     }
 
     onProjectCostsPDFHandler() {
-        let costSheetPageUrl = '/apex/CostSheetOnProjectCosts?id='
-            + this.recordId;
+        let costSheetPageUrl = '/apex/ProjectCostSummary?id=' + this.recordId;
         this[NavigationMixin.Navigate] ({
             type: 'standard__webPage',
             attributes: {

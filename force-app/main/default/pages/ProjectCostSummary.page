@@ -1,5 +1,5 @@
 <apex:page standardController='Project_Cost__c'
-           extensions="CostSheetOnProjectCostExt"
+           extensions="ProjectCostSummaryExtension"
            recordSetVar="projectCosts"
            showHeader="false"
            standardStylesheets="false" 

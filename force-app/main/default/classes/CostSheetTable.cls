@@ -21,20 +21,20 @@ public without sharing class CostSheetTable {
         get {
             // The index of the last cell is equal to the size of initial
             // account list because we add additional column for totals in the
-            // CostSheetAsPdfExtensionHelper.getPrimaryCosts method
+            // ProjectCostHelper.getPrimaryCosts method
             return PRIMARY_ACCOUNT_NAME_LIST.size();
         }
     }
     public String primaryCostsCellWidth {
         get {
-            Decimal width; 
-            width = CostSheetAsPdfExtensionHelper.DEFAULT_COST_COLUMN_WIDTH;
+            Decimal width;
+            width = ProjectCostHelper.DEFAULT_COST_COLUMN_WIDTH;
             return String.valueOf(width) + '%';
         }
     }
     public String primaryCostsTotalRowName {
         get {
-            return CostSheetAsPdfExtensionHelper.PRIMARY_COSTS_TOTAL_ROW_NAME;
+            return ProjectCostHelper.PRIMARY_COSTS_TOTAL_ROW_NAME;
         }
     }
     public List<String> primaryCostsHeaderList {
@@ -42,7 +42,7 @@ public without sharing class CostSheetTable {
             List<String> tableHeader;
             tableHeader = new List<String> (this.PRIMARY_ACCOUNT_NAME_LIST);
             tableHeader.add(
-                CostSheetAsPdfExtensionHelper.ANY_COSTS_TOTAL_COLUMN_NAME);
+                ProjectCostHelper.ANY_COSTS_TOTAL_COLUMN_NAME);
             return tableHeader;
         }
     }
@@ -53,7 +53,7 @@ public without sharing class CostSheetTable {
     }
     public String secondaryCostsTotalRowName {
         get {
-            return CostSheetAsPdfExtensionHelper.SECONDARY_COSTS_TOTAL_ROW_NAME;
+            return ProjectCostHelper.SECONDARY_COSTS_TOTAL_ROW_NAME;
         }
     }
     public Decimal overallTotal {
@@ -99,11 +99,10 @@ public without sharing class CostSheetTable {
     @TestVisible
     private void populateConstants() {
         this.PRIMARY_ACCOUNT_NAME_LIST
-            = CostSheetAsPdfExtensionHelper.getPrimaryAccountNames(
-                this.PROJECT_ID);
-        this.PRIMARY_COSTS = CostSheetAsPdfExtensionHelper.getPrimaryCosts(
+            = ProjectCostHelper.getPrimaryAccountNames(this.PROJECT_ID);
+        this.PRIMARY_COSTS = ProjectCostHelper.getPrimaryCosts(
             this.PROJECT_ID, this.PRIMARY_ACCOUNT_NAME_LIST);
-        this.SECONDARY_COSTS = CostSheetAsPdfExtensionHelper.getSecondaryCosts(
+        this.SECONDARY_COSTS = ProjectCostHelper.getSecondaryCosts(
             this.PROJECT_ID);
     }
 }
