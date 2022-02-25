@@ -1,5 +1,5 @@
 //@isTest(SeeAllData = true)
-public class ProjectCostLWCLoad_Test {
+public class ProjectCostLWCLoadTest {
 
     //@isTest
     public static void setupData() {
@@ -10,16 +10,16 @@ public class ProjectCostLWCLoad_Test {
             Vendor__c vendor = [SELECT Id FROM Vendor__c LIMIT 1];
             List<Account__c> accountLineList = new List<Account__c>();
             accountLineList.add([SELECT Id FROM Account__c
-                WHERE Name = 'Materials' AND Cost_Type__c = 'Primary_Project_Cost'
+                WHERE Name = 'Materials' AND Cost_Type__c = 'Primary Project Cost'
                 LIMIT 1]);
             accountLineList.add([SELECT Id FROM Account__c
-                WHERE Name = 'Paid On Contract' AND Cost_Type__c = 'Primary_Project_Cost'
+                WHERE Name = 'Paid On Contract' AND Cost_Type__c = 'Primary Project Cost'
                 LIMIT 1]);
             accountLineList.add([SELECT Id FROM Account__c
-                WHERE Name = 'Labor' AND Cost_Type__c = 'Primary_Project_Cost'
+                WHERE Name = 'Labor' AND Cost_Type__c = 'Primary Project Cost'
                 LIMIT 1]);
             accountLineList.add([SELECT Id FROM Account__c
-                WHERE Cost_Type__c = 'Project_Cost'
+                WHERE Cost_Type__c = 'Project Cost'
                 LIMIT 1]);
             List<Classification__c> costClassList = [SELECT Id FROM Classification__c];
             Project__c project = new Project__c();
@@ -30,14 +30,14 @@ public class ProjectCostLWCLoad_Test {
                 Project_Cost__c projectCost = new Project_Cost__c();
                 projectCost.Related_Project__c = project.Id;
                 projectCost.Account_Main__c = accountMain.Id;
-                projectCost.Account_Line__c 
+                projectCost.Account_Expense__c 
                     = accountLineList[Math.mod(i, accountLineList.size())].Id;
                 projectCost.Vendor__c = vendor.Id;
                 projectCost.Date__c = Date.today();
                 projectCost.Amount__c = 100.0;
-                projectCost.Description__c
+                projectCost.Memo__c
                     = 'Test Record. To be deleted upon load testing';
-                projectCost.Class__c
+                projectCost.Classification__c
                     = costClassList[Math.mod(i, costClassList.size())].Id;
                 projectCostList.add(projectCost);
             }

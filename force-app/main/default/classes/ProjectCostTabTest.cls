@@ -8,5 +8,6 @@ private class ProjectCostTabTest {
         Map<String, List<ProjectCostHelper.ProjectCostWrapper>> costMap
             = ProjectCostHelper.getProjectCostsRecords(projectId);
         System.assert(costMap.size() > 0);
+        System.debug(costMap.keySet());
     }
 }

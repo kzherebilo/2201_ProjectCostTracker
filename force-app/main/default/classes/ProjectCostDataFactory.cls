@@ -24,32 +24,32 @@ public class ProjectCostDataFactory {
         
         accountLineList.add(new Account__c(
             Name = 'Primary Project Cost Account Test',
-            Cost_Type__c = 'Primary_Project_Cost'
+            Cost_Type__c = 'Primary Project Cost'
         ));
         accountLineList.add(new Account__c(
             Name = 'Secondary Project Cost Account Test',
-            Cost_Type__c = 'Project_Cost'
+            Cost_Type__c = 'Project Cost'
         ));
         insert accountLineList;
 
         projectCostList.add(new Project_Cost__c(
             Related_Project__c = project.Id,
             Account_Main__c = accountMain.Id,
-            Account_Line__c = accountLineList[0].Id,
+            Account_Expense__c = accountLineList[0].Id,
             Vendor__c = vendor.Id,
             Date__c = Date.today(),
             Amount__c = 1.0,
-            Description__c = 'Test Project Cost',
-            Class__c = costClass.Id
+            Memo__c = 'Test Project Cost',
+            Classification__c = costClass.Id
         ));
         projectCostList.add(new Project_Cost__c(
             Related_Project__c = project.Id,
             Account_Main__c = accountMain.Id,
-            Account_Line__c = accountLineList[1].Id,
+            Account_Expense__c = accountLineList[1].Id,
             Vendor__c = vendor.Id,
             Date__c = Date.today(),
             Amount__c = 1.0,
-            Description__c = 'Test Project Cost'
+            Memo__c = 'Test Project Cost'
         ));
         insert projectCostList;
     }
