@@ -23,8 +23,9 @@ public without sharing class ProjectCostHelper {
                        Account_Expense__r.Name
                 FROM Project_Cost__c
                 WHERE Related_Project__r.Id =: projectId
-                    AND Classification__c != null AND Account_Expense__c != null
+                    AND Account_Expense__c != null
                     AND Account_Expense__r.Cost_Type__c = 'Primary Project Cost'
+                ORDER BY Classification__r.Name ASC NULLS LAST
             ];
             if (costList == null || costList.isEmpty()) return costMap;
     
@@ -35,6 +36,9 @@ public without sharing class ProjectCostHelper {
             for (Project_Cost__c projectCost : costList) {
                 String accountName = projectCost.Account_Expense__r.Name;
                 String costClass = projectCost.Classification__r.Name;
+                costClass = String.isBlank(costClass) 
+                    ? 'Unclassified'
+                    : projectCost.Classification__r.Name;
                 Integer columnIdx = 0;
                 columnIdx = primaryAccountNameList.indexOf(accountName);
                 if (!costMap.containsKey(costClass)) {
@@ -141,8 +145,7 @@ public without sharing class ProjectCostHelper {
                 FROM Project_Cost__c
                 WHERE Related_Project__r.Id =: projectId
                     AND Account_Expense__c != null
-                    AND ((Account_Expense__r.Cost_Type__c = 'Primary Project Cost'
-                        AND Classification__c != null)
+                    AND (Account_Expense__r.Cost_Type__c = 'Primary Project Cost'
                         OR Account_Expense__r.Cost_Type__c = 'Project Cost')
                 ORDER BY Account_Expense__r.Cost_Type__c ASC
             ];

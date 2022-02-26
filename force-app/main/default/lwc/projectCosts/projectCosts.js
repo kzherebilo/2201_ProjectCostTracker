@@ -140,7 +140,7 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
     onSortHandler(event) {
         if (event.target.ariaLabel == null) return;
         const { fieldName: sortedBy, sortDirection } = event.detail;
-        const tableLabel = event.target.ariaLabel.split(' ')[0].trim();
+        const tableLabel = event.target.ariaLabel;
         let cloneCosts = JSON.parse(JSON.stringify(this.costs));
         let costGroup = cloneCosts.filter(costGroup => {
             return costGroup.section === tableLabel })[0];
