@@ -19,15 +19,34 @@
                                   onclick={onProjectCostsPDFHandler}
                                   variant="brand">
                 </lightning-button>
+                <lightning-button-menu alternative-text="Export Options"
+                                       menu-alignment="right"
+                                       variant="border-filled"
+                                       onselect={onExportOptionsChange}>
+                    <template for:each={exportOptionsMenu} for:item="menuItem" >
+                        <lightning-menu-item key={menuItem.value}
+                                             label={menuItem.label}
+                                             value={menuItem.value}
+                                             checked={menuItem.active}>
+                        </lightning-menu-item>
+                    </template>
+                </lightning-button-menu>
             </lightning-button-group>
         </div>
     </template>
     <lightning-accordion allow-multiple-sections-open="true" 
                          for:index="index"
                          class="project-costs"
-                         onsectiontoggle={onSectionToggleHandler}>
+                         onsectiontoggle={onSectionToggleHandler}
+                         active-section-name={summarySectionName}>
+        <lightning-accordion-section name={summarySectionName}
+                                     label={summarySectionName} >
+            <p>Summary goes here</p>
+        </lightning-accordion-section>
         <template for:each={costs} for:item="cost" >
-            <lightning-accordion-section key={index} name={cost.section} label={cost.sectionLabel} >
+            <lightning-accordion-section key={index} 
+                                         name={cost.section}
+                                         label={cost.sectionLabel} >
                 <lightning-datatable key-field="id"
                                      aria-label={cost.section}
                                      columns={columns}
@@ -72,6 +91,18 @@
                                   onclick={onProjectCostsPDFHandler}
                                   variant="brand">
                 </lightning-button>
+                <lightning-button-menu alternative-text="Export Options"
+                                       menu-alignment="right"
+                                       variant="border-filled"
+                                       onselect={onExportOptionsChange}>
+                    <template for:each={exportOptionsMenu} for:item="menuItem" >
+                        <lightning-menu-item key={menuItem.value}
+                                             label={menuItem.label}
+                                             value={menuItem.value}
+                                             checked={menuItem.active}>
+                        </lightning-menu-item>
+                    </template>
+                </lightning-button-menu>
             </lightning-button-group>
         </div>
     </template>

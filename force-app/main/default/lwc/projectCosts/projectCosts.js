@@ -1,7 +1,12 @@
 import { LightningElement, api, track } from 'lwc';
 import getProjectCostsRecords from '@salesforce/apex/ProjectCostHelper.getProjectCostsRecords';
+import getPrimaryAccountNames from '@salesforce/apex/ProjectCostHelper.getPrimaryAccountNames';
+import getPrimaryCosts from '@salesforce/apex/ProjectCostHelper.getPrimaryCosts';
+import getSecondaryCosts from '@salesforce/apex/ProjectCostHelper.getSecondaryCosts';
+import getProjectCostConstants from '@salesforce/apex/ProjectCostHelper.getProjectCostConstants';
 import { NavigationMixin } from 'lightning/navigation';
 
+const SUMMARY_SECTION_NAME = 'Project Cost Summary'
 const COLUMNS = [
     {
         label: 'Vendor',
@@ -74,20 +79,63 @@ const COLUMNS = [
 export default class ProjectCosts extends NavigationMixin(LightningElement) {
     
     costs;
+    summarySectionName = SUMMARY_SECTION_NAME;
     columns = COLUMNS;
     defaultSortDirection = 'asc';
     isCostsListNotEmpty = false;
     isComponentLoading = true;
-    collapseExpandAllButtonLabel = 'Expand All';
+    collapseExpandAllButtonLabel = 'Show Details';
+    
+    costSummary;
+    overallTotal = 0.0;
+    primaryAccountNames;
+    constants;
+    exportOptionsMenu = [
+        {
+            label: 'Include Details',
+            value: 'details',
+            active: false
+        }
+    ];
 
     @api
     recordId;
 
     connectedCallback() {
-        getProjectCostsRecords({ projectId: this.recordId})
+        getProjectCostsRecords({ projectId: this.recordId })
             .then(costMap => {
                 this.processProjectCosts(costMap);
                 this.isComponentLoading = false;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        getProjectCostConstants()
+            .then(constantMap => {
+                const parameters = {
+                    projectId: this.recordId
+                }
+                this.processConstants(constantMap);
+                return getPrimaryAccountNames(parameters);
+            })
+            .then(primaryAccountNames => {
+                const parameters = {
+                    projectId: this.recordId,
+                    primaryAccountNameList: primaryAccountNames
+                }
+                this.primaryAccountNames = primaryAccountNames;
+                return getPrimaryCosts(parameters);
+            })
+            .then(costMap => {
+                const parameters = {
+                    projectId: this.recordId
+                }
+                this.processPrimaryCosts(costMap);
+                return getSecondaryCosts(parameters);
+            })
+            .then(costMap => {
+                this.processSecondaryCosts(costMap);
+                console.log(this.costSummary);
             })
             .catch(error => {
                 console.log(error);
@@ -96,18 +144,14 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
 
     processProjectCosts(costMap) {
         if (costMap == null) return;
-        let toUSD = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        });
         let costs = [];
         for (const [key, records] of Object.entries(costMap)) {
-            let subtotal = 0.0;
+            let subtotal = 0;
             for (const record of records) {
                 subtotal += record.amount;
             }
             const sectionLabel = key + '    ('
-                + toUSD.format(subtotal) + ')';
+                + this.currencyFormatter().format(subtotal) + ')';
             costs.push({ 
                 section: key,
                 sectionLabel: sectionLabel, 
@@ -119,6 +163,80 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
         }
         this.costs = costs;
         this.isCostsListNotEmpty = (costs.length > 0);
+    }
+
+    processConstants(constantMap) {
+        if (constantMap == null) return;
+        let constants = {};
+        for (const [key, value] of Object.entries(constantMap)) {
+            constants[key] = value;
+        }
+        this.constants = constants;
+    }
+
+    processPrimaryCosts(costMap) {
+        if (costMap == null) return;
+        let costSummary = [];
+        for (const [key, costsByClass] of Object.entries(costMap)) {
+            let cost = {};
+            if (key == this.constants.PRIMARY_COSTS_TOTAL_ROW_NAME) {
+                cost['class'] = null;
+                this.overallTotal 
+                    += costsByClass[this.primaryAccountNames.length];
+            } else {
+                cost['class'] = key;
+            }
+            for (let i = 0; i < this.primaryAccountNames.length; i++) {
+                let fieldName
+                    = this.primaryAccountNames[i].replaceAll(' ', '_');
+                let fieldValue 
+                    = this.currencyFormatter().format(costsByClass[i]);
+                cost[fieldName] = fieldValue;
+            }
+            cost[this.constants.ANY_COSTS_TOTAL_COLUMN_NAME]
+                = this.currencyFormatter().format(
+                    costsByClass[this.primaryAccountNames.length]);
+            costSummary.push(cost);
+        }
+        this.costSummary = costSummary;
+    }
+
+    processSecondaryCosts(costMap) {
+        if (costMap == null) return;
+        let costSummary = [...this.costSummary];
+        for (const [key, costByName] of Object.entries(costMap)) {
+            let cost = {};
+            if (key == this.constants.SECONDARY_COSTS_TOTAL_ROW_NAME) {
+                cost['class'] = null;
+                this.overallTotal += costByName;
+            } else {
+                cost['class'] = key;
+            }
+            for (let i = 0; i < this.primaryAccountNames.length; i++) {
+                let fieldName
+                    = this.primaryAccountNames[i].replaceAll(' ', '_');
+                cost[fieldName] = null;
+            }
+            cost['total'] = this.currencyFormatter().format(costByName);
+            costSummary.push(cost);
+        }
+        let cost = {};
+        cost['class'] = 'Total';
+        for (let i = 0; i < this.primaryAccountNames.length; i++) {
+            let fieldName
+                = this.primaryAccountNames[i].replaceAll(' ', '_');
+            cost[fieldName] = null;
+        }
+        cost['total'] = this.currencyFormatter().format(this.overallTotal);
+        costSummary.push(cost);
+        this.costSummary = costSummary;
+    }
+
+    currencyFormatter() {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        });
     }
 
     sortBy(field, reverse, primer) {
@@ -151,15 +269,13 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
         this.costs = cloneCosts;
     }
 
-    onCollapseExpandAllHandler(event) {
+    onCollapseExpandAllHandler() {
         let accordion = this.template.querySelector(".project-costs");
         let openSections = accordion.activeSectionName;
-        if (openSections.length > 0) {
-            openSections = [];
+        if (this.isExpandedView(openSections)) {
+            this.setCollapsedView(openSections);
         } else {
-            this.costs.forEach(function(costGroup) {
-                openSections.push(costGroup.section);
-            });
+            this.setExpandedView(openSections);
         }
         accordion.activeSectionName = openSections;
         this.setCollapseExpandButtonLabel(openSections);
@@ -168,7 +284,7 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
     onCollapseSectionHandler(event) {
         console.log(event.target.ariaLabel);
         if (event.target.ariaLabel == null) return;
-        const tableLabel = event.target.ariaLabel.split(' ')[0].trim();
+        const tableLabel = event.target.ariaLabel;
         let accordion = this.template.querySelector(".project-costs");
         let openSections = [...accordion.activeSectionName];
         openSections.splice(openSections.indexOf(tableLabel), 1);
@@ -181,11 +297,20 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
         this.setCollapseExpandButtonLabel(openSections);
     }
 
+    onExportOptionsChange(event) {
+        let options = [...this.exportOptionsMenu];
+        let optionItem = options.find(item => {
+            return item.value === event.detail.value;
+        })
+        optionItem.active = !optionItem.active;
+        this.exportOptionsMenu = options;
+    }
+
     setCollapseExpandButtonLabel(openSections) {
-        if (openSections.length > 0) {
-            this.collapseExpandAllButtonLabel = 'Collapse All';
+        if (this.isExpandedView(openSections)) {
+            this.collapseExpandAllButtonLabel = 'Hide Details';
         } else {
-            this.collapseExpandAllButtonLabel = 'Expand All';
+            this.collapseExpandAllButtonLabel = 'Show Details';
         }
     }
 
@@ -196,6 +321,28 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
             attributes: {
                 url: costSheetPageUrl
             }
+        });
+    }
+
+    isExpandedView(openSections) {
+        if (this.costs == null) return false;
+        return this.costs.reduce((isOpen, costGroup) => {
+            return isOpen || openSections.includes(costGroup.section);
+        }, false);
+    }
+
+    setCollapsedView(openSections) {
+        this.costs.forEach(function(costGroup) {
+            if (openSections.includes(costGroup.section)) {
+                openSections.splice(openSections.indexOf(
+                    costGroup.section), 1);
+            }
+        });
+    }
+
+    setExpandedView(openSections) {
+        this.costs.forEach(function(costGroup) {
+            openSections.push(costGroup.section);
         });
     }
 
