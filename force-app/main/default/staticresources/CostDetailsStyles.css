@@ -1,19 +1,18 @@
-.cost-sheet__table {
+.cost-details__table {
     -fs-table-paginate: paginate;
 }
-.cost-sheet__table caption {
+
+.cost-details__table caption {
     caption-side: top;
-    font-size: large;
     font-weight: bold;
     padding-bottom: 0.35in;
 }
-.cost-sheet__table tbody td {
-    text-align: right;
-}
 
 @media print {
-    .cost-sheet__table {
+    .cost-details__table {
         page-break-inside: auto;
     }
+    .cost-details__table caption {
+        page-break-before: always;
+    }
 }
-

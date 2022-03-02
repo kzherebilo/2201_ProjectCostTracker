@@ -10,6 +10,7 @@
                     assignTo="{! projectId }"
                     description="Project ID"/>
 
+    <apex:stylesheet value="{!URLFOR($Resource.PrintStyles)}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CostSheetStyles)}"/>
 
     <apex:outputText rendered="{! isEmptyTable }">
@@ -17,7 +18,7 @@
     </apex:outputText>
 
 
-    <table class="cost-sheet__table"
+    <table class="cost-sheet__table g-table"
            style="{! IF(isEmptyTable, 'display: none', '') }">
         
 <!-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABLE HEADER BEGIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
@@ -122,23 +123,14 @@
             <apex:repeat value="{! secondaryCosts }" var="costLineName">
                 <tr>
                     <apex:variable var="headerCellStyleClass"
-                                   value="cell__outer-border-left__thick">
+                                   value="cell__outer-border-left__thick
+                                          cell__text-align__right">
                     </apex:variable>
                     <apex:variable var="headerCellStyleClass"
                                    value="cell__outer-border-bottom__thick
                                           cell__inner-border-top__thick
-                                          cell__outer-border-left__thick"
-                                   rendered="{! costLineName = secondaryCostsTotalRowName }">
-                    </apex:variable>
-                    <apex:variable var="regularCellStyleClass"
-                                   value="cell__bg-color__not-applicable
-                                          cell__inner-border-left__thick">
-                    </apex:variable>
-                    <apex:variable var="regularCellStyleClass"
-                                   value="cell__bg-color__not-applicable 
-                                          cell__outer-border-bottom__thick
-                                          cell__inner-border-top__thick
-                                          cell__inner-border-left__thick"
+                                          cell__outer-border-left__thick
+                                          cell__text-align__right"
                                    rendered="{! costLineName = secondaryCostsTotalRowName }">
                     </apex:variable>
                     <apex:variable var="lastCellStyleClass"
@@ -160,11 +152,7 @@
                             {! costLineName }
                         </apex:outputText>
                     </th>
-                    <td colspan="{! primaryCostsLastCellIdx }"
-                        class="{! regularCellStyleClass }"
-                        style="{! IF(primaryCostsLastCellIdx = 0, 'display: none', '') }">
-                    </td>
-                    <td colspan="1"
+                    <td colspan="{! primaryCostsLastCellIdx + 1 }"
                         class="{! lastCellStyleClass }">
                         <apex:outputText value="{0, Number, Currency}">
                             <apex:param value="{! secondaryCosts[costLineName] }">

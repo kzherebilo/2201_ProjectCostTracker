@@ -139,20 +139,22 @@ public without sharing class ProjectCostHelper {
         Map<String, List<ProjectCostWrapper>> costMap;
         List<Project_Cost__c> costList = [
             SELECT Date__c,
-                    Amount__c,
-                    Memo__c,
-                    Classification__r.Name,
-                    Account_Main__r.Name,
-                    Account_Expense__r.Name,
-                    Account_Expense__r.Cost_Type__c,
-                    Vendor__c,
-                    Vendor__r.Name
+                   Amount__c,
+                   Memo__c,
+                   Classification__r.Name,
+                   Account_Main__r.Name,
+                   Account_Expense__r.Name,
+                   Account_Expense__r.Cost_Type__c,
+                   Vendor__c,
+                   Vendor__r.Name
             FROM Project_Cost__c
             WHERE Related_Project__r.Id =: projectId
                 AND Account_Expense__c != null
                 AND (Account_Expense__r.Cost_Type__c = 'Primary Project Cost'
                     OR Account_Expense__r.Cost_Type__c = 'Project Cost')
-            ORDER BY Account_Expense__r.Cost_Type__c ASC
+            ORDER BY Account_Expense__r.Cost_Type__c ASC, 
+                     Account_Expense__r.Name ASC,
+                     Date__c ASC
         ];
         // Guards
         if (costList == null || costList.isEmpty()) return costMap;
@@ -210,14 +212,14 @@ public without sharing class ProjectCostHelper {
 /******************************************************************************/
     
     public class ProjectCostWrapper {
-        @AuraEnabled public String vendorUrl;
-        @AuraEnabled public String vendorName;
-        @AuraEnabled public String accountMain;
-        @AuraEnabled public String accountExpense;
-        @AuraEnabled public String costClass;
-        @AuraEnabled public Date costDate;
-        @AuraEnabled public String description;
-        @AuraEnabled public Double amount;
+        @AuraEnabled public String vendorUrl        { get; set; }
+        @AuraEnabled public String vendorName       { get; set; }
+        @AuraEnabled public String accountMain      { get; set; }
+        @AuraEnabled public String accountExpense   { get; set; }
+        @AuraEnabled public String costClass        { get; set; }
+        @AuraEnabled public Date   costDate         { get; set; }
+        @AuraEnabled public String description      { get; set; }
+        @AuraEnabled public Double amount           { get; set; }
     }
 
 }

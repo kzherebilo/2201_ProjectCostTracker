@@ -1,5 +1,83 @@
+.g-table {
+    font-family: Helvetica, sans-serif;
+    font-size: 10pt;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+.g-table th,
+.g-table td {
+    border-style: solid;
+    border-color: black;
+    border-width: 0.5px;
+    padding: 0.05in;
+    padding-top: 0.02in;
+    padding-bottom: 0.02in;
+}
+.g-table thead th {
+    text-align: center;
+}
+
+
+.g-table .cell__text-align__right {
+    text-align: right;
+}
+.g-table .cell__font__total-amount {
+    font-weight: bold;
+}
+.g-table .cell__padding-top__large {
+    padding-top: 0.15in;
+}
+.g-table .cell__border__none {
+    border: none;
+}
+.g-table .cell__inner-border-left__thick {
+    border-left-width: 1.5px;
+}
+.g-table .cell__inner-border-top__thick {
+    border-top-width: 1.5px;
+}
+.g-table .cell__inner-border-bottom__thick {
+    border-bottom-width: 1.5px;
+}
+.g-table .cell__outer-border-left__thick {
+    border-left-width: 2px;
+}
+.g-table .cell__outer-border-right__thick {
+    border-right-width: 2px;
+}
+.g-table .cell__outer-border-top__thick {
+    border-top-width: 2px;
+}
+.g-table .cell__outer-border-bottom__thick {
+    border-bottom-width: 2px;
+}
+.g-table .cell__bg-color__not-applicable {
+    background-color: rgb(220,220,220);
+}
+
+
 @media print {
     * {
         font-family: Helvetica, sans-serif;
     }
+
+    .g-table tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+}
+
+@page {
+    size: legal;
+    padding: 0in;
+    margin-left: 0.35in;
+    margin-top: 0.35in;
+    margin-right: 0.35in;
+    margin-bottom: 0.7in;
+
+    /* @bottom-center {
+        content: counter(page) " / " counter(pages);
+        padding-bottom: 0.35in;
+    } */
 }

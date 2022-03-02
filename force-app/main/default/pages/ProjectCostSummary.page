@@ -8,4 +8,7 @@
     <c:FixPadsHeader title="{! documentTitle }"
                      subjectMajor="{! project.Name }"/>
     <c:CostSheetTable cProjectId="{! project.Id }" />
+    
+    <c:CostDetailsTable cProjectId="{! project.Id }"
+                        rendered="{! isDetailedViewEnabled }" />
 </apex:page>
