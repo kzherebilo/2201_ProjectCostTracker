@@ -78,7 +78,8 @@ public without sharing class ProjectCostHelper {
         Decimal totalAmount = 0.0;
         List<Project_Cost__c> costList = [
             SELECT Amount__c,
-                    Account_Expense__r.Display_Name_with_hierarchy__c
+                   Account_Expense__r.Name,
+                   Account_Expense__r.Display_Name_with_hierarchy__c
             FROM Project_Cost__c
             WHERE Related_Project__r.Id =: projectId
                 AND Account_Expense__c != null
@@ -88,13 +89,13 @@ public without sharing class ProjectCostHelper {
 
         for (Project_Cost__c projectCost : costList) {
             String accountName
-                = projectCost.Account_Expense__r.Display_Name_with_hierarchy__c;
+                = projectCost.Account_Expense__r.Name;
             if (!costMap.containsKey(accountName)) {
                 if (projectCost.Amount__c > 0.0) {
                     costMap.put(accountName, projectCost.Amount__c);
                 }
             } else {
-                costMap.put(accountName, costMap.get(accountName) 
+                costMap.put(accountName, costMap.get(accountName)
                     + projectCost.Amount__c);
             }
         }

@@ -3,6 +3,7 @@ public without sharing class ProjectCostSummaryExtension {
 /******************************** PROPERTIES **********************************/
 
     public Project__c project { get; private set; }
+    public Boolean isDetailedViewEnabled { get; private set; }
     public String documentTitle {
         get {
             return 'Project Cost Summary';
@@ -15,9 +16,11 @@ public without sharing class ProjectCostSummaryExtension {
     public ProjectCostSummaryExtension(
                 ApexPages.StandardSetController controller) {
 
-        ID projectId = Apexpages.currentPage().getParameters().get('id');
+        Map<String, String> parameters;
+        parameters = Apexpages.currentPage().getParameters();
+        this.isDetailedViewEnabled = Boolean.valueOf(parameters.get('details'));
         this.project = [SELECT Id, Name FROM Project__c
-            WHERE Id =: projectId LIMIT 1];
+            WHERE Id =: parameters.get('id') LIMIT 1];
         String generatedFilename = this.project.Name
             + ' - ' + documentTitle + '.pdf';
         Apexpages.currentPage().getHeaders().put(

@@ -1,5 +1,34 @@
 <template>
-    <p>
-        Test Content
-    </p>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-m-bottom_small"
+           aria-label="Project Cost Summary">
+        <thead>
+            <tr class="slds-line-height_reset">
+                <template for:each={costTableHeader} for:item="headerCell" >
+                    <th class="" scope="col" key={headerCell.id} >
+                        <div class={headerCell.class} title={headerCell.title} >
+                            {headerCell.label}
+                        </div>
+                    </th>
+                </template>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={costTableData} for:item="costByClass" >
+                <tr key={costByClass.id} class="slds-hint-parent" >
+                    <th data-label={costByClass.name} scope="row">
+                        <div class={costByClass.class}>
+                            {costByClass.label}
+                        </div>
+                    </th>
+                    <template for:each={costByClass.data} for:item="costAmount">
+                        <td key={index} >
+                            <div class={costByClass.class}>
+                                {costAmount}
+                            </div>
+                        </td>
+                    </template>
+                </tr>
+            </template>
+        </tbody>
+    </table>
 </template>

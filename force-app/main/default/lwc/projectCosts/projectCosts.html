@@ -1,4 +1,6 @@
 <template>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SPINNER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
     <template if:true={isComponentLoading} >
         <div style="height: 80px; position: relative;" >
             <lightning-spinner alternative-text="Loading"
@@ -7,7 +9,11 @@
             </lightning-spinner>
         </div>
     </template>
+
+
     <template if:true={isCostsListNotEmpty}>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> COMPONENT HEADER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
         <div class="slds-m-around_x-small" style="text-align: right;">
             <lightning-button-group>
                 <lightning-button label={collapseExpandAllButtonLabel}
@@ -33,53 +39,56 @@
                 </lightning-button-menu>
             </lightning-button-group>
         </div>
-    </template>
-    <lightning-accordion allow-multiple-sections-open="true" 
-                         for:index="index"
-                         class="project-costs"
-                         onsectiontoggle={onSectionToggleHandler}
-                         active-section-name={summarySectionName}>
-        <lightning-accordion-section name={summarySectionName}
-                                     label={summarySectionName} >
-            <p>Summary goes here</p>
-        </lightning-accordion-section>
-        <template for:each={costs} for:item="cost" >
-            <lightning-accordion-section key={index} 
-                                         name={cost.section}
-                                         label={cost.sectionLabel} >
-                <lightning-datatable key-field="id"
-                                     aria-label={cost.section}
-                                     columns={columns}
-                                     data={cost.data}
-                                     hide-checkbox-column="true"
-                                     resize-column-disabled="true"
-                                     default-sort-direction={defaultSortDirection}
-                                     sorted-direction={cost.sortDirection}
-                                     sorted-by={cost.sortedBy}
-                                     onsort={onSortHandler} >
-                </lightning-datatable>
-                <div class="slds-grid slds-gutters" >
-                    <div class="slds-col">
-                        <lightning-button label="Collapse"
-                                          title="Collapse Section"
-                                          aria-label={cost.section}
-                                          onclick={onCollapseSectionHandler}
-                                          variant="base"
-                                          class="slds-m-left_x-small">
-                        </lightning-button>
-                    </div>
-                    <div class="slds-col" style="margin: 10px; text-align: right;">
-                        <lightning-formatted-number value={cost.subtotal}
-                                                    format-style="currency"
-                                                    currency-code="USD"
-                                                    style="font-weight: bold;">
-                        </lightning-formatted-number>
-                    </div>
-                </div>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> COMPONENT BODY <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+        <lightning-accordion allow-multiple-sections-open="true" 
+                             for:index="index"
+                             class="project-costs"
+                             onsectiontoggle={onSectionToggleHandler}
+                             active-section-name={summarySectionName}>
+            <lightning-accordion-section name={summarySectionName}
+                                         label={summarySectionName} >
+                <c-project-cost-summary project-id={recordId} >
+                </c-project-cost-summary>
             </lightning-accordion-section>
-        </template>
-    </lightning-accordion>
-    <template if:true={isCostsListNotEmpty} >
+            <template for:each={costs} for:item="cost" >
+                <lightning-accordion-section key={index} 
+                                             name={cost.section}
+                                             label={cost.sectionLabel} >
+                    <lightning-datatable key-field="id"
+                                         aria-label={cost.section}
+                                         columns={columns}
+                                         data={cost.data}
+                                         hide-checkbox-column="true"
+                                         resize-column-disabled="true"
+                                         default-sort-direction={defaultSortDirection}
+                                         sorted-direction={cost.sortDirection}
+                                         sorted-by={cost.sortedBy}
+                                         onsort={onSortHandler} >
+                    </lightning-datatable>
+                    <div class="slds-grid slds-gutters" >
+                        <div class="slds-col">
+                            <lightning-button label="Collapse"
+                                              title="Collapse Section"
+                                              aria-label={cost.section}
+                                              onclick={onCollapseSectionHandler}
+                                              variant="base"
+                                              class="slds-m-left_x-small">
+                            </lightning-button>
+                        </div>
+                        <div class="slds-col" style="margin: 10px; text-align: right;">
+                            <lightning-formatted-number value={cost.subtotal}
+                                                        format-style="currency"
+                                                        currency-code="USD"
+                                                        style="font-weight: bold;">
+                            </lightning-formatted-number>
+                        </div>
+                    </div>
+                </lightning-accordion-section>
+            </template>
+        </lightning-accordion>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> COMPONENT FOOTER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
         <div class="slds-m-around_x-small" style="text-align: right;">
             <lightning-button-group>
                 <lightning-button label={collapseExpandAllButtonLabel}
@@ -105,5 +114,7 @@
                 </lightning-button-menu>
             </lightning-button-group>
         </div>
+
+        
     </template>
 </template>

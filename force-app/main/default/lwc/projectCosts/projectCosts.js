@@ -1,9 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
 import getProjectCostsRecords from '@salesforce/apex/ProjectCostHelper.getProjectCostsRecords';
-import getPrimaryAccountNames from '@salesforce/apex/ProjectCostHelper.getPrimaryAccountNames';
-import getPrimaryCosts from '@salesforce/apex/ProjectCostHelper.getPrimaryCosts';
-import getSecondaryCosts from '@salesforce/apex/ProjectCostHelper.getSecondaryCosts';
-import getProjectCostConstants from '@salesforce/apex/ProjectCostHelper.getProjectCostConstants';
 import { NavigationMixin } from 'lightning/navigation';
 
 const SUMMARY_SECTION_NAME = 'Project Cost Summary'
@@ -86,10 +82,6 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
     isComponentLoading = true;
     collapseExpandAllButtonLabel = 'Show Details';
     
-    costSummary;
-    overallTotal = 0.0;
-    primaryAccountNames;
-    constants;
     exportOptionsMenu = [
         {
             label: 'Include Details',
@@ -106,36 +98,6 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
             .then(costMap => {
                 this.processProjectCosts(costMap);
                 this.isComponentLoading = false;
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        getProjectCostConstants()
-            .then(constantMap => {
-                const parameters = {
-                    projectId: this.recordId
-                }
-                this.processConstants(constantMap);
-                return getPrimaryAccountNames(parameters);
-            })
-            .then(primaryAccountNames => {
-                const parameters = {
-                    projectId: this.recordId,
-                    primaryAccountNameList: primaryAccountNames
-                }
-                this.primaryAccountNames = primaryAccountNames;
-                return getPrimaryCosts(parameters);
-            })
-            .then(costMap => {
-                const parameters = {
-                    projectId: this.recordId
-                }
-                this.processPrimaryCosts(costMap);
-                return getSecondaryCosts(parameters);
-            })
-            .then(costMap => {
-                this.processSecondaryCosts(costMap);
-                console.log(this.costSummary);
             })
             .catch(error => {
                 console.log(error);
@@ -163,73 +125,6 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
         }
         this.costs = costs;
         this.isCostsListNotEmpty = (costs.length > 0);
-    }
-
-    processConstants(constantMap) {
-        if (constantMap == null) return;
-        let constants = {};
-        for (const [key, value] of Object.entries(constantMap)) {
-            constants[key] = value;
-        }
-        this.constants = constants;
-    }
-
-    processPrimaryCosts(costMap) {
-        if (costMap == null) return;
-        let costSummary = [];
-        for (const [key, costsByClass] of Object.entries(costMap)) {
-            let cost = {};
-            if (key == this.constants.PRIMARY_COSTS_TOTAL_ROW_NAME) {
-                cost['class'] = null;
-                this.overallTotal 
-                    += costsByClass[this.primaryAccountNames.length];
-            } else {
-                cost['class'] = key;
-            }
-            for (let i = 0; i < this.primaryAccountNames.length; i++) {
-                let fieldName
-                    = this.primaryAccountNames[i].replaceAll(' ', '_');
-                let fieldValue 
-                    = this.currencyFormatter().format(costsByClass[i]);
-                cost[fieldName] = fieldValue;
-            }
-            cost[this.constants.ANY_COSTS_TOTAL_COLUMN_NAME]
-                = this.currencyFormatter().format(
-                    costsByClass[this.primaryAccountNames.length]);
-            costSummary.push(cost);
-        }
-        this.costSummary = costSummary;
-    }
-
-    processSecondaryCosts(costMap) {
-        if (costMap == null) return;
-        let costSummary = [...this.costSummary];
-        for (const [key, costByName] of Object.entries(costMap)) {
-            let cost = {};
-            if (key == this.constants.SECONDARY_COSTS_TOTAL_ROW_NAME) {
-                cost['class'] = null;
-                this.overallTotal += costByName;
-            } else {
-                cost['class'] = key;
-            }
-            for (let i = 0; i < this.primaryAccountNames.length; i++) {
-                let fieldName
-                    = this.primaryAccountNames[i].replaceAll(' ', '_');
-                cost[fieldName] = null;
-            }
-            cost['total'] = this.currencyFormatter().format(costByName);
-            costSummary.push(cost);
-        }
-        let cost = {};
-        cost['class'] = 'Total';
-        for (let i = 0; i < this.primaryAccountNames.length; i++) {
-            let fieldName
-                = this.primaryAccountNames[i].replaceAll(' ', '_');
-            cost[fieldName] = null;
-        }
-        cost['total'] = this.currencyFormatter().format(this.overallTotal);
-        costSummary.push(cost);
-        this.costSummary = costSummary;
     }
 
     currencyFormatter() {
@@ -315,7 +210,13 @@ export default class ProjectCosts extends NavigationMixin(LightningElement) {
     }
 
     onProjectCostsPDFHandler() {
-        let costSheetPageUrl = '/apex/ProjectCostSummary?id=' + this.recordId;
+        let baseUrl = '/apex/ProjectCostSummary';
+        let parameters = '?id=' + this.recordId;
+        this.exportOptionsMenu.forEach(option => {
+            parameters += '&' + option.value + '=' + option.active;
+        });
+        let costSheetPageUrl = baseUrl + parameters;
+        console.log(costSheetPageUrl);
         this[NavigationMixin.Navigate] ({
             type: 'standard__webPage',
             attributes: {
