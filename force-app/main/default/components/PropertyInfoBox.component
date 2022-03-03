@@ -1,0 +1,28 @@
+<apex:component access="public" allowDML="false"
+    language="en_US" selfClosing="true">
+
+    <apex:attribute name="cProperty" type="map" required="false"
+        description="Property Info Map" />
+    <apex:attribute name="cFields" type="map" required="false"
+        description="Property Info Map Keys" />
+
+    <apex:stylesheet value="{!URLFOR($Resource.PrintStyles)}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.PropertyInfoBoxStyles)}"/>
+
+    <div class="propertyInfo" >
+        <table class="property-info__table">
+            <tbody>
+                <apex:repeat value="{! cFields }" var="fieldName" >
+                    <tr>
+                        <th scope="row" >
+                            {! fieldName } :
+                        </th>
+                        <td>
+                            {! cProperty[fieldName] }
+                        </td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+    </div>
+</apex:component>

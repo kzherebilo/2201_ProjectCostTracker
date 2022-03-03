@@ -24,3 +24,18 @@
     width: 200px;
     height: 100px;
 }
+
+@media print {
+    .fixPadsHeader {
+        display: block;
+        position: running(fixPadsHeader);
+        padding: 0;
+        margin-top: 0.15in;
+    }
+}
+
+@page {
+    @top-center {
+        content: element(fixPadsHeader);
+    }
+}

@@ -3,9 +3,10 @@
 }
 
 .cost-details__table caption {
+    font-size: 12pt;
     caption-side: top;
     font-weight: bold;
-    padding-bottom: 0.35in;
+    padding-bottom: 0.15in;
 }
 
 @media print {

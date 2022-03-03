@@ -2,11 +2,20 @@
            extensions="ProjectCostSummaryExtension"
            recordSetVar="projectCosts"
            showHeader="false"
-           standardStylesheets="false" 
+           standardStylesheets="false"
+           applyBodyTag="true"
+           applyHtmlTag="true" 
            renderAs="pdf" >
 
     <c:FixPadsHeader title="{! documentTitle }"
                      subjectMajor="{! project.Name }"/>
+
+    <c:fixPadsFooter leftSection="{! footerLeftSection }"
+                     centerSection="{! footerCenterSection }"
+                     rightSection="{! footerRightSection }" />
+    <c:PropertyInfoBox cProperty="{! propertyInfo }"
+                       cFields="{! propertyInfoFields }" />
+                       
     <c:CostSheetTable cProjectId="{! project.Id }" />
     
     <c:CostDetailsTable cProjectId="{! project.Id }"

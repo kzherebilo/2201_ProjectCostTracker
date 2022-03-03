@@ -1,0 +1,35 @@
+<apex:component access="public" allowDML="false"
+    language="en_US" selfClosing="true">
+
+    <apex:attribute name="leftSection" type="String" required="false"
+        description="Leftmost Section Of The Footer" default=""/>
+    <apex:attribute name="centerSection" type="String" required="false"
+        description="Center Section Of The Footer" default=""/>
+    <apex:attribute name="rightSection" type="String" required="false"
+        description="Right Section Of The Footer" default="" />
+    
+    <apex:stylesheet value="{!URLFOR($Resource.PrintStyles)}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.FixPadsFooterStyles)}"/>
+    
+	<div class="fixPadsFooter" >
+        <table>
+            <tr>
+                <td>
+                    <div class="left-section__footer">
+                        <pre>{! leftSection }</pre>
+                    </div>
+                </td>
+                <td>
+                    <div class="center-section__footer">
+                        <pre>{! centerSection }</pre>
+                    </div>
+                </td>
+                <td>
+                    <div class="right-section__footer">
+                        <pre>{! rightSection }</pre>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</apex:component>

@@ -1,0 +1,33 @@
+.fixPadsFooter table {
+    width: 100%;
+    font-size: 7pt;
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+.fixPadsFooter td {
+    width: 33.3%;
+    text-align: center;
+    border-top: 1px solid black;
+}
+.fixPadsFooter .left-section__footer {
+    text-align: left;
+}
+.fixPadsFooter .right-section__footer {
+    text-align: right;
+}
+
+
+@media print {
+    .fixPadsFooter {
+        display: block;
+        position: running(fixPadsFooter);
+        padding: 0;
+        margin-bottom: 0.05in;
+    }
+}
+
+@page {
+    @bottom-center {
+        content: element(fixPadsFooter);
+    }
+}

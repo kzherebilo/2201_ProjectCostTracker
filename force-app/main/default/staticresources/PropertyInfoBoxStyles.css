@@ -1,0 +1,23 @@
+.propertyInfo {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 0.25in;
+}
+
+.propertyInfo table {
+    font-size: 10pt;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.propertyInfo table th {
+    text-align: right;
+    width: 25%;
+}
+
+.propertyInfo table td {
+    text-align: left;
+}
+
