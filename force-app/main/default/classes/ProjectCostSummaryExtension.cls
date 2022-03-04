@@ -23,7 +23,9 @@ public without sharing class ProjectCostSummaryExtension {
 
         Map<String, String> parameters;
         parameters = Apexpages.currentPage().getParameters();
-        this.isDetailedViewEnabled = Boolean.valueOf(parameters.get('details'));
+        this.isDetailedViewEnabled = parameters.containsKey('details')
+            ? Boolean.valueOf(parameters.get('details')) 
+            : false;
         this.project = [
             SELECT Id, 
                    Name,

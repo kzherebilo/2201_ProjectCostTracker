@@ -6,19 +6,20 @@ private class ProjectCostSummaryTest {
 
         ProjectCostDataFactory.setupTestData();
         Id projectId = [SELECT Id FROM Project__c LIMIT 1].Id;
-        List<Project_Cost__c> projectCostList 
+        List<Project_Cost__c> projectCostList
             = [SELECT Id FROM Project_Cost__c];
-        
+
         Test.startTest();
         PageReference pageRef = Page.ProjectCostSummary;
         pageRef.getParameters().put('id', String.valueOf(projectId));
         Test.setCurrentPage(pageRef);
         ApexPages.StandardSetController stdSetController
             = new ApexPages.StandardSetController(projectCostList);
+        System.assertNotEquals(stdSetController, null);
         stdSetController.setSelected(projectCostList);
         ProjectCostSummaryExtension controller
             = new ProjectCostSummaryExtension(stdSetController);
-        System.assertEquals(controller.project.Id, projectId);
+        
         CostSheetTable componentController = new CostSheetTable();
         componentController.setProjectId(projectId);
         System.assertEquals(componentController.getProjectId(), projectId);
@@ -44,6 +45,22 @@ private class ProjectCostSummaryTest {
             + componentController.emptyTableMessage);
         System.debug('PRIMARY ACCOUNT NAMES: '
             + componentController.primaryAccountNames);
+
+        CostDetailsTable detailsController = new CostDetailsTable();
+        detailsController.setProjectId(projectId);
+        System.assertEquals(detailsController.getProjectId(), projectId);
+        System.debug('TABLE HEADERS: ' + detailsController.headerList);
+        System.debug('GROUP NAME LIST: ' + detailsController.groupNameList);
+        System.debug('NUMBER OF RECORDS BY GROUP: '
+            + detailsController.numberOfRecordsByGroup);
+        System.debug('PROJECT COST LISTL: ' + detailsController.costList);
+        System.debug('LAST CELL IN A ROW: '
+            + detailsController.lastCellIndex);
+        System.debug('AMOUNT CELL WIDTH: '
+            + detailsController.amountCellWidth);
+        System.debug('DEFAULT CELL WIDTH: '
+            + detailsController.defaultCellWidth);
+
         Test.stopTest();
     }
 }

@@ -31,6 +31,12 @@ public without sharing class CostDetailsTable {
         }
     }
 
+    public Map<String, Integer> numberOfRecordsByGroup {
+        get {
+            return this.NUMBER_OF_RECORDS_BY_GROUP;
+        }
+    }
+
     public Integer lastCellIndex {
         get {
             return this.TABLE_HEADERS.size() - 1;
@@ -53,13 +59,6 @@ public without sharing class CostDetailsTable {
             return  String.valueOf(width) + '%';
         }
     }
-
-    public Map<String, Integer> numberOfRecordsByGroup {
-        get {
-            return this.NUMBER_OF_RECORDS_BY_GROUP;
-        }
-    }
-
 
 /********************************** METHODS ***********************************/
     public ID getProjectId() {
