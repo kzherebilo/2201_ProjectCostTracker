@@ -13,91 +13,93 @@
     <apex:stylesheet value="{!URLFOR($Resource.PrintStyles)}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CostDetailsStyles)}"/>
 
-    <apex:repeat value="{! groupNameList }" var="costGroupName" >
-        <table class="cost-details__table g-table">
-            <caption>
-                {! costGroupName }
-            </caption>
-            <thead>
-                <tr>
+    <div class="cost-details__container" >
+        <apex:repeat value="{! groupNameList }" var="costGroupName" >
+            <table class="cost-details__table g-table" >
+                <caption>
+                    {! costGroupName }
+                </caption>
+                <thead>
+                    <tr>
+                        <apex:variable var="cellIndex" value="{! 0 }" />
+                        <apex:repeat value="{! headerList }" var="headerName" >
+                            <apex:variable var="generalCellStyleClass"
+                                           value="cell__outer-border-top__thick
+                                                  cell__inner-border-bottom__thick " />
+                            <apex:variable var="specificCellStyleClass"
+                                           value="cell__inner-border-left__thick" />
+                            <apex:variable var="specificCellStyleClass"
+                                           value="cell__outer-border-right__thick
+                                                  cell__inner-border-left__thick"
+                                           rendered="{! cellIndex = lastCellIndex }" />
+                            <apex:variable var="specificCellStyleClass"
+                                           value="cell__outer-border-left__thick"
+                                           rendered="{! cellIndex = 0 }" />
+                            <th class="{! generalCellStyleClass + specificCellStyleClass }">
+                                {! headerName }
+                            </th>
+                            <apex:variable var="cellIndex" value="{! cellIndex + 1 }" />
+                        </apex:repeat>
+                    </tr>
+                </thead>
+                <tbody>
                     <apex:variable var="cellIndex" value="{! 0 }" />
-                    <apex:repeat value="{! headerList }" var="headerName" >
-                        <apex:variable var="generalCellStyleClass"
-                                       value="cell__outer-border-top__thick
-                                              cell__inner-border-bottom__thick " />
-                        <apex:variable var="specificCellStyleClass"
-                                       value="cell__inner-border-left__thick" />
-                        <apex:variable var="specificCellStyleClass"
-                                       value="cell__outer-border-right__thick
-                                              cell__inner-border-left__thick"
-                                       rendered="{! cellIndex = lastCellIndex }" />
-                        <apex:variable var="specificCellStyleClass"
-                                       value="cell__outer-border-left__thick"
-                                       rendered="{! cellIndex = 0 }" />
-                        <th class="{! generalCellStyleClass + specificCellStyleClass }">
-                            {! headerName }
-                        </th>
+                    <apex:repeat value="{! costList[costGroupName] }" var="cost" >
+                        <tr>
+                            <apex:variable var="lastRowCellStyle"
+                                           value="" />
+                            <apex:variable var="lastRowCellStyle"
+                                           value="cell__outer-border-bottom__thick"
+                                           rendered="{! numberOfRecordsByGroup[costGroupName] 
+                                                    = (cellIndex + 1) }"/>
+                            <td class="cell__outer-border-left__thick
+                                    {! lastRowCellStyle }"
+                                style="width: {! defaultCellWidth }">
+                                {! cost.vendorName }
+                            </td>
+                            <td class="cell__inner-border-left__thick
+                                    {! lastRowCellStyle }"
+                                style="width: {! defaultCellWidth }">
+                                {! cost.accountMain }
+                            </td>
+                            <td class="cell__inner-border-left__thick
+                                    {! lastRowCellStyle }"
+                                style="width: {! defaultCellWidth }">
+                                {! cost.accountExpense }
+                            </td>
+                            <td class="cell__inner-border-left__thick
+                                    {! lastRowCellStyle }"
+                                style="width: {! defaultCellWidth }">
+                                {! cost.costClass }
+                            </td>
+                            <td class="cell__inner-border-left__thick
+                                    {! lastRowCellStyle }"
+                                style="width: {! defaultCellWidth }">
+                                <apex:outputText value="{0, Date, MM/dd/yyyy}">
+                                    <apex:param value="{! cost.costDate }">
+                                    </apex:param>
+                                </apex:outputText>
+                            </td>
+                            <td class="cell__inner-border-left__thick
+                                    {! lastRowCellStyle }"
+                                style="width: {! defaultCellWidth }">
+                                {! cost.description }
+                            </td>
+                            <td class="cell__inner-border-left__thick
+                                    cell__outer-border-right__thick
+                                    {! lastRowCellStyle }"
+                                style="width: {! amountCellWidth }">
+                                <apex:outputText value="{0, Number, Currency}">
+                                    <apex:param value="{! cost.amount }">
+                                    </apex:param>
+                                </apex:outputText>
+                            </td>
+                        </tr>
                         <apex:variable var="cellIndex" value="{! cellIndex + 1 }" />
                     </apex:repeat>
-                </tr>
-            </thead>
-            <tbody>
-                <apex:variable var="cellIndex" value="{! 0 }" />
-                <apex:repeat value="{! costList[costGroupName] }" var="cost" >
-                    <tr>
-                        <apex:variable var="lastRowCellStyle"
-                                       value="" />
-                        <apex:variable var="lastRowCellStyle"
-                                       value="cell__outer-border-bottom__thick"
-                                       rendered="{! numberOfRecordsByGroup[costGroupName] 
-                                                = (cellIndex + 1) }"/>
-                        <td class="cell__outer-border-left__thick
-                                   {! lastRowCellStyle }"
-                            style="width: {! defaultCellWidth }">
-                            {! cost.vendorName }
-                        </td>
-                        <td class="cell__inner-border-left__thick
-                                   {! lastRowCellStyle }"
-                            style="width: {! defaultCellWidth }">
-                            {! cost.accountMain }
-                        </td>
-                        <td class="cell__inner-border-left__thick
-                                   {! lastRowCellStyle }"
-                            style="width: {! defaultCellWidth }">
-                            {! cost.accountExpense }
-                        </td>
-                        <td class="cell__inner-border-left__thick
-                                   {! lastRowCellStyle }"
-                            style="width: {! defaultCellWidth }">
-                            {! cost.costClass }
-                        </td>
-                        <td class="cell__inner-border-left__thick
-                                   {! lastRowCellStyle }"
-                            style="width: {! defaultCellWidth }">
-                            <apex:outputText value="{0, Date, MM/dd/yyyy}">
-                                <apex:param value="{! cost.costDate }">
-                                </apex:param>
-                            </apex:outputText>
-                        </td>
-                        <td class="cell__inner-border-left__thick
-                                   {! lastRowCellStyle }"
-                            style="width: {! defaultCellWidth }">
-                            {! cost.description }
-                        </td>
-                        <td class="cell__inner-border-left__thick
-                                   cell__outer-border-right__thick
-                                   {! lastRowCellStyle }"
-                            style="width: {! amountCellWidth }">
-                            <apex:outputText value="{0, Number, Currency}">
-                                <apex:param value="{! cost.amount }">
-                                </apex:param>
-                            </apex:outputText>
-                        </td>
-                    </tr>
-                    <apex:variable var="cellIndex" value="{! cellIndex + 1 }" />
-                </apex:repeat>
-            </tbody>
-        </table>
-    </apex:repeat>
-
+                </tbody>
+            </table>
+        </apex:repeat>
+    </div>
+    
 </apex:component>

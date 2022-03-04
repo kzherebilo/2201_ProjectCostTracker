@@ -1,3 +1,7 @@
+.cost-details__container {
+    width: 13.2in;
+}
+
 .cost-details__table {
     -fs-table-paginate: paginate;
 }
@@ -6,14 +10,12 @@
     font-size: 12pt;
     caption-side: top;
     font-weight: bold;
-    padding-bottom: 0.15in;
+    padding-bottom: 0.07in;
+    padding-top: 0.18in;
 }
 
 @media print {
     .cost-details__table {
         page-break-inside: auto;
-    }
-    .cost-details__table caption {
-        page-break-before: always;
     }
 }

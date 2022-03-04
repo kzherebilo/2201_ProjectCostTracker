@@ -68,13 +68,15 @@
     }
 }
 
-
+@page :first {
+    size: legal portrait;
+}
 @page {
-    size: legal;
+    size: legal landscape;
     padding: 0in;
-    margin-left: 0.35in;
+    margin-left: 0.3in;
     margin-top: 1.15in;
-    margin-right: 0.35in;
+    margin-right: 0.3in;
     margin-bottom: 0.5in;
 }
 

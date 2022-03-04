@@ -46,7 +46,7 @@ public without sharing class CostDetailsTable {
     public String amountCellWidth {
         get {
             Decimal width;
-            width = ProjectCostHelper.DEFAULT_COST_COLUMN_WIDTH;
+            width = 7;
             return String.valueOf(width) + '%';
         }
     }

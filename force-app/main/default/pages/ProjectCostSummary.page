@@ -17,6 +17,9 @@
                        cFields="{! propertyInfoFields }" />
                        
     <c:CostSheetTable cProjectId="{! project.Id }" />
+
+    <div style="{! IF(isDetailedViewEnabled, 'page-break-after: always;', '') }">
+    </div>
     
     <c:CostDetailsTable cProjectId="{! project.Id }"
                         rendered="{! isDetailedViewEnabled }" />
