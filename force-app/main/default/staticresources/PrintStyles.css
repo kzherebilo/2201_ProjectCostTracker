@@ -71,6 +71,7 @@
 @page :first {
     size: legal portrait;
 }
+
 @page {
     size: legal landscape;
     padding: 0in;
@@ -78,5 +79,13 @@
     margin-top: 1.15in;
     margin-right: 0.3in;
     margin-bottom: 0.5in;
+
+    @top-center {
+        content: element(fixPadsHeader);
+    }
+
+    @bottom-center {
+        content: element(fixPadsFooter);
+    }
 }
 

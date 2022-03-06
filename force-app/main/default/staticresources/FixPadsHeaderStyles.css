@@ -33,9 +33,3 @@
         margin-top: 0.15in;
     }
 }
-
-@page {
-    @top-center {
-        content: element(fixPadsHeader);
-    }
-}

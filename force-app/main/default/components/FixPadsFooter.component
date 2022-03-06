@@ -14,20 +14,21 @@
 	<div class="fixPadsFooter" >
         <table>
             <tr>
-                <td>
-                    <div class="left-section__footer">
-                        <pre>{! leftSection }</pre>
-                    </div>
+                <td class="section-LL__footer">
+                    <pre>{! leftSection }</pre>
                 </td>
-                <td>
-                    <div class="center-section__footer">
-                        <pre>{! centerSection }</pre>
-                    </div>
+                <td class="section-LC__footer">
+                    <!-- Empty slot. Reserved for future use -->
                 </td>
-                <td>
-                    <div class="right-section__footer">
-                        <pre>{! rightSection }</pre>
-                    </div>
+                <td class="center-section__footer">
+                    <pre>{! centerSection }</pre>
+                </td>
+                <td class="section-RC__footer">
+                    Page <span class="pagenumber"></span> of
+                    <span class="pagecount"></span>
+                </td>
+                <td class="section-RR__footer">
+                    <pre>{! rightSection }</pre>
                 </td>
             </tr>
         </table>
