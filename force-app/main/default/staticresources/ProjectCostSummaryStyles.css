@@ -1,0 +1,25 @@
+@page :first {
+    size: legal portrait;
+    padding: 0in;
+    margin-left: 0.3in;
+    margin-top: 1.15in;
+    margin-right: 0.3in;
+    margin-bottom: 0.5in;
+
+    @top-center {
+        content: element(header);
+    }
+}
+
+@page {
+    size: legal landscape;
+    padding: 0in;
+    margin-left: 0.3in;
+    margin-top: 0.3in;
+    margin-right: 0.3in;
+    margin-bottom: 0.5in;
+
+    @bottom-center {
+        content: element(footer);
+    }
+}

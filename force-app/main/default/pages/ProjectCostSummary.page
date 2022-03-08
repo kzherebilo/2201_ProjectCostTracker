@@ -7,6 +7,8 @@
            applyHtmlTag="true" 
            renderAs="pdf" >
 
+    <apex:stylesheet value="{!URLFOR($Resource.ProjectCostSummaryStyles)}"/>
+
     <c:FixPadsHeader title="{! documentTitle }"
                      subjectMajor="{! project.Name }"
                      isHeader="true" />
