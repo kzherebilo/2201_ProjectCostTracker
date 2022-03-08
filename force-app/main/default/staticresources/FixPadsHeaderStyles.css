@@ -13,10 +13,6 @@
     white-space: pre;
     margin-top: 7px;
 }
-.fixPadsHeader table {
-    width: 100%;
-    margin-bottom: 30px;
-}
 .fixPadsHeader .companyLogo {
     float: right;
     padding-bottom: 0px;
@@ -24,11 +20,19 @@
     width: 200px;
     height: 100px;
 }
+.header table {
+    width: 100%;
+    margin-bottom: 30px;
+}
+.fixPadsHeader-regular table {
+    width: 13.2in;
+    margin-bottom: 0;
+}
 
 @media print {
-    .fixPadsHeader {
+    .header {
+        position: running(header);
         display: block;
-        position: running(fixPadsHeader);
         padding: 0;
         margin-top: 0.15in;
     }

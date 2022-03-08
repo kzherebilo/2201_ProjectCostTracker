@@ -37,9 +37,9 @@
 }
 
 @media print {
-    .fixPadsFooter {
+    .footer {
         display: block;
-        position: running(fixPadsFooter);
+        position: running(footer);
         padding: 0;
         margin-bottom: 0.05in;
     }

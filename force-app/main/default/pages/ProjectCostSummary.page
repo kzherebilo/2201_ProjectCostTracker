@@ -8,7 +8,8 @@
            renderAs="pdf" >
 
     <c:FixPadsHeader title="{! documentTitle }"
-                     subjectMajor="{! project.Name }"/>
+                     subjectMajor="{! project.Name }"
+                     isHeader="true" />
 
     <c:fixPadsFooter leftSection="{! footerLeftSection }"
                      centerSection="{! footerCenterSection }"
@@ -21,6 +22,10 @@
     <div style="{! IF(isDetailedViewEnabled, 'page-break-after: always;', '') }">
     </div>
     
+    <c:FixPadsHeader title="{! documentTitle }"
+                     subjectMajor="{! project.Name }"
+                     isHeader="false"
+                     rendered="{! isDetailedViewEnabled }"/>
     <c:CostDetailsTable cProjectId="{! project.Id }"
                         rendered="{! isDetailedViewEnabled }" />
 </apex:page>

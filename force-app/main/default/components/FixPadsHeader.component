@@ -9,11 +9,16 @@
         description="Subject Line 2" default="" />
     <apex:attribute name="notes" type="String" required="false"
         description="Additional notes" default="" />
+    <apex:attribute name="isHeader" type="Boolean" required="false"
+        description="If true, component appearance conforms to general
+                    style for PDF reports (behaves as a header);
+                    otherwise it appears as a regular HTML mark-up"
+        default="false" />
     
     <apex:stylesheet value="{!URLFOR($Resource.PrintStyles)}"/>
     <apex:stylesheet value="{!URLFOR($Resource.FixPadsHeaderStyles)}"/>
-    
-	<div class="fixPadsHeader" >
+
+	<div class="fixPadsHeader {! IF(isHeader, 'header', 'fixPadsHeader-regular') }" >
         <table>
             <tr>
                 <td>

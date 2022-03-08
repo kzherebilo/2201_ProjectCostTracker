@@ -4,18 +4,21 @@
 
 .cost-details__table {
     -fs-table-paginate: paginate;
+    margin-bottom: 0.20in;
 }
 
 .cost-details__table caption {
     font-size: 12pt;
     caption-side: top;
     font-weight: bold;
-    padding-bottom: 0.07in;
-    padding-top: 0.18in;
+    margin-bottom: 0.07in;
 }
 
 @media print {
     .cost-details__table {
         page-break-inside: auto;
+    }
+    .cost-details__table caption {
+        page-break-after: avoid;
     }
 }

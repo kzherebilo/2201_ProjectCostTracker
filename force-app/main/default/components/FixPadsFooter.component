@@ -11,7 +11,7 @@
     <apex:stylesheet value="{!URLFOR($Resource.PrintStyles)}"/>
     <apex:stylesheet value="{!URLFOR($Resource.FixPadsFooterStyles)}"/>
     
-	<div class="fixPadsFooter" >
+	<div class="fixPadsFooter footer" >
         <table>
             <tr>
                 <td class="section-LL__footer">
