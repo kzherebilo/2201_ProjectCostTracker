@@ -24,11 +24,11 @@
                     <pre>{! centerSection }</pre>
                 </td>
                 <td class="section-RC__footer">
-                    Page <span class="pagenumber"></span> of
-                    <span class="pagecount"></span>
                 </td>
                 <td class="section-RR__footer">
                     <pre>{! rightSection }</pre>
+                    Page <span class="pagenumber"></span> of
+                    <span class="pagecount"></span>
                 </td>
             </tr>
         </table>

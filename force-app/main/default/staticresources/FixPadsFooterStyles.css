@@ -17,11 +17,11 @@
     text-align: center;
 }
 .fixPadsFooter .section-RC__footer {
-    width: 16.6%;
+    width: 0.3%;
     text-align: center;
 }
 .fixPadsFooter .section-RR__footer {
-    width: 16.6%;
+    width: 33%;
     text-align: right;
 }
 .fixPadsFooter .pagenumber:before {
@@ -30,7 +30,10 @@
 .fixPadsFooter .pagecount:before {
     content: counter(pages);
 }
-
+.fixPadsFooter pre {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
 .fixPadsFooter td {
     text-align: center;
     border-top: 1px solid black;
